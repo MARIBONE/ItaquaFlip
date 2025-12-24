@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
         // Configuração do mapa
-        var map = L.map('map').setView([-23.5505, -46.6333], 300); // Ajuste a localização inicial e o nível de zoom
+        var map = L.map('map').setView([-23.5505, -46.6333], 30); // Ajuste a localização inicial e o nível de zoom
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
