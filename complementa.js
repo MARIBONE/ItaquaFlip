@@ -1,10 +1,10 @@
 
 $(document).ready(function() {
         // Configuração do mapa
-        var map = L.map('map').setView([-23.5505, -46.6333], 2); // Ajuste a localização inicial e o nível de zoom
+        var map = L.map('map').setView([-23.5505, -46.6333], 200); // Ajuste a localização inicial e o nível de zoom
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19
+            maxZoom: 190
         }).addTo(map);
 
         // Adicionar pinos com base nas coordenadas fornecidas na tabela
