@@ -4,16 +4,15 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-    // TILE AZUL: cinza vira azul escuro, ruas azul claro, verde preservado
     L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
         {
             maxZoom: 19,
-            subdomains: 'abcd'
+            subdomains: 'abcd',
+            className: 'blue-gray-map'
         }
     ).addTo(map);
 
-    // Marcador central
     L.marker([-23.4866, -46.3487])
         .addTo(map)
         .bindPopup('Itaquaquecetuba — Território Soberano');
