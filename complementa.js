@@ -2,7 +2,7 @@ $(document).ready(function() {
     // Configuração do mapa sob decreto real
     var map = L.map('map', {
         scrollWheelZoom: false
-    }).setView([-23.5505, -46.6333], 8);
+    }).setView([-23.5505, -46.6333], 12);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
