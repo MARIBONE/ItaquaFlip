@@ -1,22 +1,14 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
     var map = L.map('map', {
         scrollWheelZoom: false
-    }).setView([-23.4866, -46.3487], 16);
+    }).setView([-23.4866, -46.3487], 12);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
     }).addTo(map);
 
-    // Itaquaquecetuba (área visível)
-    var itaqua = [
-        [-23.455, -46.410],
-        [-23.455, -46.300],
-        [-23.520, -46.300],
-        [-23.520, -46.410]
-    ];
-
-    // Mundo inteiro (máscara)
+    // Polígono do mundo
     var world = [
         [-90, -180],
         [-90, 180],
@@ -24,16 +16,24 @@ $(document).ready(function() {
         [90, -180]
     ];
 
-    // Máscara preta com furo em Itaqua
-    L.polygon([world, itaqua], {
-        fillColor: '#000',
-        fillOpacity: 10.0,
-        stroke: false
-    }).addTo(map);
+    // Carregar limite EXATO de Itaqua (GeoJSON IBGE)
+    fetch('itaquaquecetuba.geojson')
+        .then(res => res.json())
+        .then(geojson => {
 
-    // Marcador imperial
-    L.marker([-23.4866, -46.3487])
-        .addTo(map)
-        .bindPopup('Itaquaquecetuba — Domínio de Sua Majestade');
+            var itaquaLayer = L.geoJSON(geojson);
+
+            var itaquaCoords = itaquaLayer.getLayers()[0].getLatLngs();
+
+            // Máscara inversa: mundo escuro, Itaqua livre
+            L.polygon([world, itaquaCoords], {
+                fillColor: '#000',
+                fillOpacity: 0.85,
+                stroke: false
+            }).addTo(map);
+
+            // Ajustar o zoom ao território real
+            map.fitBounds(itaquaLayer.getBounds());
+        });
 
 });
