@@ -1,8 +1,8 @@
-
 $(document).ready(function() {
-        // Configuração do mapa
+    // Configuração do mapa sob decreto real
+    var map = L.map('map', {
         scrollWheelZoom: false
-        var map = L.map('map').setView([-23.5505, -46.6333], 8); // Ajuste a localização inicial e o nível de zoom
+    }).setView([-23.5505, -46.6333], 8);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
