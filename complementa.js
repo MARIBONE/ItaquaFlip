@@ -1,29 +1,28 @@
 $(document).ready(function() {
+    // Configuração do mapa sob decreto real
+    var map = L.map('map', {
+        scrollWheelZoom: false
+    }).setView([-23.5505, -46.6333], 8);
 
-    var map = L.map('map').setView([-23.5505, -46.6333], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
 
-    // Decreto imperial: desativar TODOS os controles de zoom por interação
-    map.scrollWheelZoom.disable();
-    map.touchZoom.disable();
-    map.doubleClickZoom.disable();
-    map.boxZoom.disable();
-    map.keyboard.disable();
+        // Adicionar pinos com base nas coordenadas fornecidas na tabela
+        var coordinates = [
+            { lat: -23.5505, lng: -46.6333 }
+            // Adicione mais coordenadas conforme necessário
+        ];
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
-    }).addTo(map);
+        coordinates.forEach(function(coord) {
+            L.marker([coord.lat, coord.lng]).addTo(map)
+                .bindPopup('Localização: ' + coord.lat + ', ' + coord.lng)
+                .openPopup();
+        });
 
-    var coordinates = [
-        { lat: -23.5505, lng: -46.6333 }
-    ];
 
-    coordinates.forEach(function(coord) {
-        L.marker([coord.lat, coord.lng])
-            .addTo(map)
-            .bindPopup('Localização: ' + coord.lat + ', ' + coord.lng);
-    });
 
-});
+
 
 
 
