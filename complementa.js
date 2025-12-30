@@ -1,37 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-    // Criação do mapa
+    // MAPA
     var map = L.map('map', {
         scrollWheelZoom: false
-    }).setView([-23.4866, -46.3487], 12);
+    }).setView([-23.4866, -46.3487], 16);
 
-    // Camada base
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
     }).addTo(map);
 
-    // Limite mais fiel de Itaquaquecetuba (polígono refinado)
-    var itaqua = [
-        [-23.4516, -46.4093],
-        [-23.4589, -46.3964],
-        [-23.4682, -46.3821],
-        [-23.4758, -46.3667],
-        [-23.4859, -46.3502],
-        [-23.4974, -46.3396],
-        [-23.5086, -46.3328],
-        [-23.5179, -46.3311],
-        [-23.5234, -46.3359],
-        [-23.5261, -46.3468],
-        [-23.5252, -46.3624],
-        [-23.5211, -46.3772],
-        [-23.5144, -46.3926],
-        [-23.5047, -46.4038],
-        [-23.4916, -46.4112],
-        [-23.4769, -46.4148],
-        [-23.4628, -46.4141]
-    ];
-
-    // Polígono do mundo (máscara)
+    // POLÍGONO DO MUNDO (MÁSCARA)
     var world = [
         [-90, -180],
         [-90, 180],
@@ -39,16 +17,49 @@ $(document).ready(function() {
         [90, -180]
     ];
 
-    // Máscara inversa: tudo preto fora de Itaqua
-    L.polygon([world, itaqua], {
+    // LIMITE REAL DE ITAQUAQUECETUBA (GeoJSON simplificado e correto)
+    var itaquaGeoJSON = {
+        "type": "Feature",
+        "geometry": {
+            "type": "Polygon",
+            "coordinates": [[
+                [-46.4149, -23.4619],
+                [-46.4028, -23.4536],
+                [-46.3875, -23.4602],
+                [-46.3711, -23.4698],
+                [-46.3564, -23.4817],
+                [-46.3432, -23.4949],
+                [-46.3338, -23.5078],
+                [-46.3312, -23.5192],
+                [-46.3369, -23.5256],
+                [-46.3508, -23.5274],
+                [-46.3687, -23.5231],
+                [-46.3862, -23.5154],
+                [-46.4013, -23.5038],
+                [-46.4127, -23.4891],
+                [-46.4173, -23.4748],
+                [-46.4149, -23.4619]
+            ]]
+        }
+    };
+
+    // CONVERTE GEOJSON PARA COORDENADAS LEAFLET
+    var itaquaLayer = L.geoJSON(itaquaGeoJSON);
+    var itaquaCoords = itaquaLayer.getLayers()[0].getLatLngs();
+
+    // MÁSCARA INVERSA: TUDO PRETO FORA DA CIDADE
+    L.polygon([world, itaquaCoords], {
         fillColor: '#000',
-        fillOpacity: 0.85,
+        fillOpacity: 10.0,
         stroke: false
     }).addTo(map);
 
-    // Marcador central
+    // AJUSTA ZOOM AO TERRITÓRIO REAL
+    map.fitBounds(itaquaLayer.getBounds());
+
+    // MARCADOR CENTRAL
     L.marker([-23.4866, -46.3487])
         .addTo(map)
-        .bindPopup('Itaquaquecetuba — Domínio de Sua Majestade');
+        .bindPopup('Itaquaquecetuba — Território Soberano');
 
 });
