@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     var map = L.map('map', {
         scrollWheelZoom: false
-    }).setView([-23.4866, -46.3487], 12);
+    }).setView([-23.4866, -46.3487], 16);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19
@@ -27,7 +27,7 @@ $(document).ready(function() {
     // Máscara preta com furo em Itaqua
     L.polygon([world, itaqua], {
         fillColor: '#000',
-        fillOpacity: 0.85,
+        fillOpacity: 10.0,
         stroke: false
     }).addTo(map);
 
