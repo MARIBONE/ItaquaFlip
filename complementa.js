@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var map = L.map('map').setView([-23.5505, -46.6333], 12);
+    var map = L.map('map').setView([-23.5505, -46.6333], 16);
 
     // Decreto imperial: desativar TODOS os controles de zoom por interação
     map.scrollWheelZoom.disable();
