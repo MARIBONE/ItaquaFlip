@@ -1,6 +1,7 @@
 
 $(document).ready(function() {
         // Configuração do mapa
+        scrollWheelZoom: false
         var map = L.map('map').setView([-23.5505, -46.6333], 8); // Ajuste a localização inicial e o nível de zoom
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
