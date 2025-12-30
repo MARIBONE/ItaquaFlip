@@ -8,6 +8,37 @@ $(document).ready(function() {
             maxZoom: 19
         }).addTo(map);
 
+    // Limites aproximados de Itaquaquecetuba (polígono simplificado)
+    var itaqua = [
+        [-23.455, -46.410],
+        [-23.455, -46.300],
+        [-23.520, -46.300],
+        [-23.520, -46.410]
+    ];
+
+    // Polígono do mundo inteiro (máscara)
+    var world = [
+        [-90, -180],
+        [-90,  180],
+        [ 90,  180],
+        [ 90, -180]
+    ];
+
+    // Máscara: mundo preto com furo em Itaqua
+    L.polygon([world, itaqua], {
+        color: '#000',
+        fillColor: '#000',
+        fillOpacity: 0.85,
+        stroke: false
+    }).addTo(map);
+
+    // Marcador real
+    L.marker([-23.4866, -46.3487])
+        .addTo(map)
+        .bindPopup('Itaquaquecetuba – Território de Sua Majestade');
+
+});
+
         // Adicionar pinos com base nas coordenadas fornecidas na tabela
         var coordinates = [
             { lat: -23.5505, lng: -46.6333 }
