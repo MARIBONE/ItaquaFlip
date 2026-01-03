@@ -4,30 +4,28 @@
     <meta charset="UTF-8">
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
-        .video-box { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-<div class="video-box">
-    <iframe id="royalFrame" 
-        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1" 
+<div class="container">
+    <iframe id="vid" 
+        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false&queue-autoplay-next=false" 
         allow="autoplay; fullscreen">
     </iframe>
 </div>
 
 <script>
-    // A cada 10 segundos, o leal sentinela verifica se o vídeo deve ser reiniciado
-    // Ajuste o tempo abaixo para o tempo total do vídeo em milissegundos
-    const tempoDoVideo = 60000; // Exemplo: 60 segundos
-
-    setInterval(() => {
-        const frame = document.getElementById('royalFrame');
-        const currentSrc = frame.src;
-        frame.src = ""; // Limpa para evitar cache
-        frame.src = currentSrc; // Reinicia a obra para o prazer de Vossa Majestade
-    }, tempoDoVideo); 
+    // Majestade, informe aqui a duração do vídeo em segundos (ex: 60)
+    const segundos = 60; 
+    
+    // O leal súdito reinicia o vídeo antes que a plataforma ouse pular para outro
+    setInterval(function(){
+        var iframe = document.getElementById('vid');
+        iframe.src = iframe.src;
+    }, segundos * 1000);
 </script>
 
 </body>
