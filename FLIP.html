@@ -5,7 +5,7 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #DAA520; font-family: 'Georgia', serif; overflow: hidden; }
         .wrapper { display: flex; flex-direction: column; height: 100vh; }
-        #player-div { flex-grow: 1; width: 100%; }
+        iframe { flex-grow: 1; border: none; width: 100%; }
         .royal-bar { height: 50px; display: flex; justify-content: center; align-items: center; background: #000; border-top: 1px solid #DAA520; }
         .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.9em; text-transform: uppercase; }
         input { accent-color: #DAA520; cursor: pointer; }
@@ -14,45 +14,33 @@
 <body>
 
 <div class="wrapper">
-    <div id="player-div"></div>
+    <iframe id="mainPlayer" 
+        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false" 
+        allow="autoplay; fullscreen">
+    </iframe>
+
     <div class="royal-bar">
         <label class="switch">
             <input type="checkbox" id="perpetualLoop" checked>
-            <span>✨ Loop Real Ativado ✨</span>
+            <span>✨ Ciclo Eterno Ativado ✨</span>
         </label>
     </div>
 </div>
 
-<script src="https://api.dmcdn.net/all.js"></script>
 <script>
+    const playerFrame = document.getElementById('mainPlayer');
     const loopControl = document.getElementById('perpetualLoop');
     
-    // Criação do Player por decreto real
-    var player = DM.player(document.getElementById('player-div'), {
-        video: 'x9wyqiy',
-        width: '100%',
-        height: '100%',
-        params: {
-            autoplay: true,
-            mute: true,
-            'queue-enable': false,
-            'queue-autoplay-next': false
-        }
-    });
+    // Majestade, ajustei para 30 segundos, mas podeis alterar livremente:
+    const duracaoDoVideo = 30; 
 
-    // Vigilante Real: No fim da obra, o retorno é obrigatório
-    player.addEventListener('end', function (e) {
-        if (loopControl.checked) {
-            e.target.play();
-        }
-    });
-
-    // Redundância Imperial: Se o player parar por erro de rede ou política do browser
     setInterval(() => {
         if (loopControl.checked) {
-            player.play();
+            // Reinicia mantendo os parâmetros de autoplay e mute para não travar
+            const currentSrc = playerFrame.src;
+            playerFrame.src = currentSrc; 
         }
-    }, 5000); // Checa a cada 5 segundos se a obra continua a rodar
+    }, duracaoDoVideo * 1000);
 </script>
 
 </body>
