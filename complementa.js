@@ -5,8 +5,11 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© CARTO'
+   // A VISÃO DE SATÉLITE DE VOSSA MAJESTADE
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg', {
+    minZoom: 0,
+    maxZoom: 20,
+    attribution: '&copy; CNES, Airbus DS, PlanetObserver, Stadia Maps, OpenStreetMap'
 }).addTo(map);
 
    
