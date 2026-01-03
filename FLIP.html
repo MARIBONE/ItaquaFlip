@@ -22,7 +22,7 @@
     <div class="royal-bar">
         <label class="switch">
             <input type="checkbox" id="perpetualLoop" checked>
-            <span>✨ Ciclo Eterno Ativado ✨</span>
+            <span>✨ Ciclo Eterno Camuflado ✨</span>
         </label>
     </div>
 </div>
@@ -30,17 +30,28 @@
 <script>
     const playerFrame = document.getElementById('mainPlayer');
     const loopControl = document.getElementById('perpetualLoop');
-    
-    // Majestade, ajustei para 30 segundos, mas podeis alterar livremente:
-    const duracaoDoVideo = 300; 
 
-    setInterval(() => {
-        if (loopControl.checked) {
-            // Reinicia mantendo os parâmetros de autoplay e mute para não travar
-            const currentSrc = playerFrame.src;
-            playerFrame.src = currentSrc; 
-        }
-    }, duracaoDoVideo * 1000);
+    function iniciarCicloReal() {
+        // Vossa Majestade definiu 300 segundos (5 minutos)
+        // Criamos uma margem de erro de 40 segundos para mais ou para menos
+        const baseSegundos = 300;
+        const variacao = Math.floor(Math.random() * 80) - 40; // Entre -40 e +40
+        const tempoFinal = (baseSegundos + variacao) * 1000;
+
+        setTimeout(() => {
+            if (loopControl.checked) {
+                // O renascimento da obra sem o rastro do metrônomo
+                const currentSrc = playerFrame.src;
+                playerFrame.src = currentSrc;
+                
+                // Agenda o próximo play com uma nova variação aleatória
+                iniciarCicloReal();
+            }
+        }, tempoFinal);
+    }
+
+    // Inicia a primeira vigília secreta
+    iniciarCicloReal();
 </script>
 
 </body>
