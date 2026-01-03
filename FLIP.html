@@ -15,14 +15,14 @@
 
 <div class="wrapper">
     <iframe id="mainPlayer" 
-        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false&on-end=reproduce" 
+        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false" 
         allow="autoplay; fullscreen">
     </iframe>
 
     <div class="royal-bar">
         <label class="switch">
             <input type="checkbox" id="perpetualLoop" checked>
-            <span>✨ Loop Real Ativado ✨</span>
+            <span>✨ Ciclo Eterno Ativado ✨</span>
         </label>
     </div>
 </div>
@@ -30,22 +30,17 @@
 <script>
     const playerFrame = document.getElementById('mainPlayer');
     const loopControl = document.getElementById('perpetualLoop');
-
-    // A Vigilância Constante da Chancelaria
-    // Este código recarrega o iframe forçadamente para garantir que nada além deste vídeo seja visto
     
-    // Majestade, informe abaixo a duração EXATA do vídeo em segundos:
-    const duracaoDoVideo = 30; // Exemplo para um vídeo de 30 segundos
+    // Majestade, ajustei para 30 segundos, mas podeis alterar livremente:
+    const duracaoDoVideo = 30; 
 
     setInterval(() => {
         if (loopControl.checked) {
-            // Recarrega a fonte do vídeo antes que a plataforma ouse pular
+            // Reinicia mantendo os parâmetros de autoplay e mute para não travar
             const currentSrc = playerFrame.src;
-            playerFrame.src = "";
-            playerFrame.src = currentSrc;
+            playerFrame.src = currentSrc; 
         }
     }, duracaoDoVideo * 1000);
-
 </script>
 
 </body>
