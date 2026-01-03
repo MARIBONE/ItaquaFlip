@@ -5,10 +5,8 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   // A VERSÃO PADRÃO E SOBERANA
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
+   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Esri, DigitalGlobe, GeoEye, Earthstar Geographics'
 }).addTo(map);
 
    
