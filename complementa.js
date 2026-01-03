@@ -5,11 +5,17 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   // A IMPLEMENTAÇÃO DEFINITIVA DE VOSSA MAJESTADE
-var Stadia_AlidadeSatellite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg', {
-    minZoom: 0,
-    maxZoom: 20,
-    }).addTo(map);
+   // CAMADA 1: A FOTO DE SATÉLITE (O FUNDO)
+var satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19
+}).addTo(map);
+
+// CAMADA 2: OS NOMES DAS RUAS (A SOBREPOSIÇÃO)
+// Este link traz apenas os nomes e linhas com fundo transparente
+var nomesRuas = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    pane: 'shadowPane' // Garante que os nomes fiquem por cima de tudo
+}).addTo(map);
 
    
     
