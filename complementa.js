@@ -5,9 +5,8 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+   L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}, {
     maxZoom: 19,
-    className: 'mapa-matrix' // O selo que invoca a realidade digital
 }).addTo(map);
 
    
