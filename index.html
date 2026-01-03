@@ -51,12 +51,14 @@ position: left;
 
 }
 
+
+    
     .blue-gray-map {
-    filter:
-        hue-rotate(210deg)
-        saturate(1.15)
-        brightness(0.95)
-        contrast(1.05);
+    filter: 
+        invert(100%)         /* Transforma o branco em preto e o preto em branco */
+        hue-rotate(180deg)   /* Corrige as cores para que não fiquem estranhas após a inversão */
+        brightness(0.9)      /* Ajusta a intensidade para não ofuscar vossos olhos reais */
+        contrast(1.2);       /* Deixa as estradas e nomes mais nítidos na escuridão */
 }
 
 
