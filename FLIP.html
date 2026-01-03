@@ -3,29 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
-        .container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: sans-serif; }
+        .video-container { position: relative; width: 100%; height: 90vh; }
         iframe { width: 100%; height: 100%; border: none; }
+        .controls { height: 10vh; display: flex; justify-content: center; align-items: center; background: #111; }
+        .replay-btn { 
+            padding: 12px 30px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            color: gold; 
+            background: #333; 
+            border: 2px solid gold; 
+            border-radius: 5px; 
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .replay-btn:hover { background: gold; color: black; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <iframe id="vid" 
-        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false&queue-autoplay-next=false" 
+<div class="video-container">
+    <iframe id="royalPlayer" 
+        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false" 
         allow="autoplay; fullscreen">
     </iframe>
 </div>
 
+<div class="controls">
+    <button class="replay-btn" onclick="reiniciarObra()">🔄 REPLAY PARA A MAJESTADE</button>
+</div>
+
 <script>
-    // Majestade, informe aqui a duração do vídeo em segundos (ex: 60)
-    const segundos = 60; 
-    
-    // O leal súdito reinicia o vídeo antes que a plataforma ouse pular para outro
-    setInterval(function(){
-        var iframe = document.getElementById('vid');
-        iframe.src = iframe.src;
-    }, segundos * 1000);
+    function reiniciarObra() {
+        var iframe = document.getElementById('royalPlayer');
+        var currentSrc = iframe.src;
+        iframe.src = ""; // Limpeza cerimonial
+        iframe.src = currentSrc; // Renascimento imediato
+    }
 </script>
 
 </body>
