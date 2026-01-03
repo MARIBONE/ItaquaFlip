@@ -52,25 +52,6 @@ position: left;
 
 
     
-    /* O Segredo da Noite Azul de Vossa Majestade */
-.mapa-neon-azul {
-    filter: 
-        invert(100%)           /* Inverte para base preta */
-        hue-rotate(190deg)     /* Rotaciona o espectro para o Azul Claro */
-        brightness(0.8)        /* Mantém o fundo profundo e escuro */
-        saturate(1.5)          /* Deixa o azul das ruas vibrante */
-        contrast(1.2);         /* Define bem as fronteiras das estradas */
-    background: #000 !important; /* Garante que o fundo seja o vácuo absoluto */
-}
-
-/* Proteção Real: impede que os ícones e popups fiquem azuis ou estranhos */
-.leaflet-marker-icon, .leaflet-popup-content-wrapper {
-    filter: invert(100%) hue-rotate(-190deg) !important;
-}
-
-
-
-    
   </style>
 
 
