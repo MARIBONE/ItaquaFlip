@@ -5,9 +5,10 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+   // A VERSÃO PADRÃO E SOBERANA
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
-    className: 'mapa-neon-azul' // Aqui a mágica acontece, Majestade!
+    attribution: '© OpenStreetMap'
 }).addTo(map);
 
    
