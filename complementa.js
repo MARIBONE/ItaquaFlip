@@ -5,8 +5,10 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}, {
-    maxZoom: 19,
+   // O DECRETO FINAL: IMPLEMENTAÇÃO STADIA ALIDADE SATELLITE
+var Stadia_AlidadeSatellite = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg', {
+	minZoom: 0,
+	maxZoom: 20,
 }).addTo(map);
 
    
