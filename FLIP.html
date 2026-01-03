@@ -3,45 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: gold; font-family: 'Segoe UI', sans-serif; }
-        .container { display: flex; flex-direction: column; height: 100vh; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #DAA520; font-family: 'Georgia', serif; overflow: hidden; }
+        .wrapper { display: flex; flex-direction: column; height: 100vh; }
         iframe { flex-grow: 1; border: none; width: 100%; }
-        .panel { height: 60px; display: flex; justify-content: center; align-items: center; background: #1a1a1a; border-top: 2px solid #333; }
-        .toggle-container { display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        input[type="checkbox"] { transform: scale(1.5); cursor: pointer; accent-color: gold; }
-        label { font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .royal-bar { height: 50px; display: flex; justify-content: center; align-items: center; background: #000; border-top: 1px solid #DAA520; }
+        .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 0.9em; text-transform: uppercase; }
+        input { accent-color: #DAA520; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <iframe id="royalPlayer" 
-        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false" 
+<div class="wrapper">
+    <iframe id="mainPlayer" 
+        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1&queue-enable=false&on-end=reproduce" 
         allow="autoplay; fullscreen">
     </iframe>
 
-    <div class="panel">
-        <div class="toggle-container">
-            <input type="checkbox" id="loopToggle" checked>
-            <label for="loopToggle">Ativar Loop Perpétuo de Vossa Majestade</label>
-        </div>
+    <div class="royal-bar">
+        <label class="switch">
+            <input type="checkbox" id="perpetualLoop" checked>
+            <span>✨ Loop Real Ativado ✨</span>
+        </label>
     </div>
 </div>
 
-<script src="https://api.dmcdn.net/all.js"></script>
 <script>
-    // Iniciando o player sob a vigilância do trono
-    var player = DM.player(document.getElementById('royalPlayer'), {
-        video: 'x9wyqiy',
-        params: { autoplay: true, mute: true, 'queue-enable': false }
-    });
+    const playerFrame = document.getElementById('mainPlayer');
+    const loopControl = document.getElementById('perpetualLoop');
 
-    // O veredito real: se o checkbox estiver marcado, o vídeo retorna ao início
-    player.addEventListener('end', function() {
-        if (document.getElementById('loopToggle').checked) {
-            player.play();
+    // A Vigilância Constante da Chancelaria
+    // Este código recarrega o iframe forçadamente para garantir que nada além deste vídeo seja visto
+    
+    // Majestade, informe abaixo a duração EXATA do vídeo em segundos:
+    const duracaoDoVideo = 30; // Exemplo para um vídeo de 30 segundos
+
+    setInterval(() => {
+        if (loopControl.checked) {
+            // Recarrega a fonte do vídeo antes que a plataforma ouse pular
+            const currentSrc = playerFrame.src;
+            playerFrame.src = "";
+            playerFrame.src = currentSrc;
         }
-    });
+    }, duracaoDoVideo * 1000);
+
 </script>
 
 </body>
