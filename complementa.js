@@ -5,8 +5,8 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Esri, DigitalGlobe, GeoEye, Earthstar Geographics'
+   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CARTO'
 }).addTo(map);
 
    
