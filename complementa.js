@@ -5,11 +5,10 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   // A VISÃO DE SATÉLITE DE VOSSA MAJESTADE
-L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg', {
-    minZoom: 0,
-    maxZoom: 20,
-    attribution: '&copy; CNES, Airbus DS, PlanetObserver, Stadia Maps, OpenStreetMap'
+   // VISÃO DE SATÉLITE REAL — SEM CHAVES OU CADASTROS
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 }).addTo(map);
 
    
