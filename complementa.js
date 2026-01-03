@@ -5,11 +5,9 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-    // A OPÇÃO 3: O CAMINHO DA PAZ E DA NITIDEZ
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap contributors, © CARTO',
-    subdomains: 'abcd',
-    maxZoom: 19
+   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    className: 'mapa-neon-azul' // Aqui a mágica acontece, Majestade!
 }).addTo(map);
 
    
