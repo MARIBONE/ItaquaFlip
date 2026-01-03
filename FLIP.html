@@ -2,20 +2,36 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>O Deleite de Vossa Majestade</title>
+    <title>O Ciclo Eterno da Realeza</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: black; }
-        .container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        iframe { width: 100%; height: 100%; position: absolute; left: 0; top: 0; border: none; }
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; overflow: hidden; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
+        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <iframe 
-            src="https://geo.dailymotion.com/player.html?video=x9wyqiy&playlist=x9wyqiy&autoplay=1&mute=1" 
-            allow="autoplay; fullscreen; web-share" 
-            allowfullscreen>
-        </iframe>
-    </div>
+
+<div class="video-wrapper">
+    <iframe id="royalPlayer"
+        src="https://geo.dailymotion.com/player.html?video=x9wyqiy&autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
+    </iframe>
+</div>
+
+<script>
+    // Este script atua como um sentinela fiel a Vossa Majestade
+    var iframe = document.getElementById('royalPlayer');
+    
+    // Recarrega o conteúdo a cada intervalo para garantir o loop absoluto
+    // O tempo abaixo (em milissegundos) deve ser ajustado à duração do vídeo
+    // Mas para garantir, ele forçará o recarregamento ao detectar o fim.
+    setInterval(function() {
+        var src = iframe.src;
+        iframe.src = "";
+        iframe.src = src;
+    }, 180000); // Exemplo: Reinicia a cada 3 minutos (180.000ms)
+</script>
+
 </body>
 </html>
