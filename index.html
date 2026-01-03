@@ -52,9 +52,20 @@ position: left;
 
 
     
-    .blue-gray-map {
-    /* O segredo da inteligência: inverter para escurecer */
-    filter: none;
+    /* O Segredo da Noite Azul de Vossa Majestade */
+.mapa-neon-azul {
+    filter: 
+        invert(100%)           /* Inverte para base preta */
+        hue-rotate(190deg)     /* Rotaciona o espectro para o Azul Claro */
+        brightness(0.8)        /* Mantém o fundo profundo e escuro */
+        saturate(1.5)          /* Deixa o azul das ruas vibrante */
+        contrast(1.2);         /* Define bem as fronteiras das estradas */
+    background: #000 !important; /* Garante que o fundo seja o vácuo absoluto */
+}
+
+/* Proteção Real: impede que os ícones e popups fiquem azuis ou estranhos */
+.leaflet-marker-icon, .leaflet-popup-content-wrapper {
+    filter: invert(100%) hue-rotate(-190deg) !important;
 }
 
 
@@ -93,7 +104,7 @@ position: left;
 </section>
     
     
-<main style="display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center; max-width: 100%; height: 80vw; margin: 1px; border: 1px solid #000000; background: linear-gradient(to bottom, #FF8C00, #00FF00)">
+<main style="display: flex; flex-wrap: wrap; justify-content: space-evenly; align-items: center; max-width: 100%; height: auto; margin: 1px; border: 1px solid #000000; background: linear-gradient(to bottom, #FF8C00, #00FF00)">
   <h1 style="width: 100%; text-align: center;"> Lugares mais Procurados:</h1>
   
 <div style="width: 45%; height: 20vw; margin: 1px; border: 1px solid #000000; overflow: hidden;">
