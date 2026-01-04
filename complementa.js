@@ -5,16 +5,10 @@ $(document).ready(function () {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
-   // CAMADA 1: A FOTO DE SATÉLITE (O FUNDO)
-var satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19
-}).addTo(map);
-
-// CAMADA 2: OS NOMES DAS RUAS (A SOBREPOSIÇÃO)
-// Este link traz apenas os nomes e linhas com fundo transparente
-var nomesRuas = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    pane: 'shadowPane' // Garante que os nomes fiquem por cima de tudo
+   // O MAPA LIVRE E SOBERANO (ESTILO ESCURO COM NOMES)
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(map);
 
    
