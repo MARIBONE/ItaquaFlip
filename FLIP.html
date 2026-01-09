@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<link rel="icon" type="image/png" href="https://dn710400.ca.archive.org/0/items/itq-5-removebg-preview/ITQ_5_-removebg-preview.png">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="No celular, no carro, no relógio e na TV. Tecnologia de Alto Nível, seu sistema com a Raiz Maribone. Leve sua Marca mais longe!">
-<meta name="author" content="Æ Maribone Tecnologia">
-<meta name="generator" content= "Æ Maribone Tecnologia">
-<meta name="robots" content="/index, follow">
-<meta name="keywords" content="Desenvolvimento de Sistemas, Licenciamento de Software, Design de Projetos. Seu sistema com a Raiz Maribone!">
-<title><ItaquaFlip Motoristas> </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="No celular, no carro, no relógio e na TV. Tecnologia de Alto Nível, seu sistema com a Raiz Maribone. Leve sua Marca mais longe!">
+    <meta name="author" content="Æ Maribone Tecnologia">
+    <meta name="generator" content= "Æ Maribone Tecnologia">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="Desenvolvimento de Sistemas, Licenciamento de Software, Design de Projetos. Seu sistema com a Raiz Maribone!">
+    <link rel="icon" type="image/png" href="https://dn710400.ca.archive.org/0/items/itq-5-removebg-preview/ITQ_5_-removebg-preview.png">
     
-</head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    
+    <title>ItaquaFlip Motoristas</title>
 
     <style> 
-    
-body {
-  margin: 1px;
-  border: 1px solid #000000;
-  font-family: 'garamond', 'times new roman', 'arial', 'sans-serif'; /* Correção aqui */
-  font-size: 2vw;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-  font-weight: bold;
-  width: 98vw;
-  height: auto;
-  word-spacing: 0.4em;
-}
-
+        body {
+            margin: 1px;
+            border: 1px solid #000000;
+            font-family: 'garamond', 'times new roman', 'arial', 'sans-serif';
+            font-size: 2vw;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+            font-weight: bold;
+            width: 98vw;
+            height: auto;
+            word-spacing: 0.4em;
+        }
 
         #map {
-height: auto;
-max-width: 50%;
-position: left;
+            /* Removida a heresia 'position: left' para evitar erros de renderização */
+            width: 100%; 
+            height: 98vh;
+        }
+    </style>
+</head>
 
-}
+<body>
+    <div id="map"></div>
 
-
- </style>
-
-        
-        <body>
-
-    <div id="map" style="max-width: 100%; height: 98vh;">
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-        
-    </div>
-
-<script src="driver.js"></script>
-    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="driver.js"></script>
 </body>
-
-    </html>
+</html>
