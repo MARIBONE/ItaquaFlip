@@ -37,3 +37,13 @@ L.marker([-23.4866, -46.3487])
 
 
 }); 
+
+
+
+function enviarPosicao(lat, lng) {
+    const url = "URL_DO_VOSSO_DEPLOY_APPS_SCRIPT";
+    fetch(url, {
+        method: "POST",
+        body: JSON.stringify({ lat: lat, lng: lng, motorista: "Súdito 01" })
+    });
+}
