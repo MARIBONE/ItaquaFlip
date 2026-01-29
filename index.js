@@ -40,7 +40,7 @@ L.marker([-23.4866, -46.3487])
 
 
 setInterval(function() {
-    fetch("URL_DO_VOSSO_DEPLOY_APPS_SCRIPT")
+    fetch("https://script.google.com/macros/s/AKfycbycNtfKcsjIWoDFVGQ-53oY7hZW4Qf-YLjCQkGne3OYqsxif8q8gP1x-gou88y8nfWn2Q/exec")
         .then(response => response.json())
         .then(dados => {
             var lat = dados[0][1];
