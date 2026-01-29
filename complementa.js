@@ -41,7 +41,7 @@ L.marker([-23.4866, -46.3487])
 
 
 function enviarPosicao(lat, lng) {
-    const url = "URL_DO_VOSSO_DEPLOY_APPS_SCRIPT";
+    const url = "https://script.google.com/macros/s/AKfycbycNtfKcsjIWoDFVGQ-53oY7hZW4Qf-YLjCQkGne3OYqsxif8q8gP1x-gou88y8nfWn2Q/exec";
     fetch(url, {
         method: "POST",
         body: JSON.stringify({ lat: lat, lng: lng, motorista: "Súdito 01" })
