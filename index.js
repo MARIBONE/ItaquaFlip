@@ -37,3 +37,15 @@ L.marker([-23.4866, -46.3487])
 
 
 }); 
+
+
+setInterval(function() {
+    fetch("URL_DO_VOSSO_DEPLOY_APPS_SCRIPT")
+        .then(response => response.json())
+        .then(dados => {
+            var lat = dados[0][1];
+            var lng = dados[0][2];
+            // Atualiza o Pin Real no Mapa de Vossa Majestade
+            meuMarcador.setLatLng([lat, lng]);
+        });
+}, 5000); // Repete a cada 5 segundos
