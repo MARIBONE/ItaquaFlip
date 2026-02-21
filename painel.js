@@ -1,3 +1,27 @@
+$(document).ready(function () {
+    // MAPA
+    var map = L.map('map', {
+        scrollWheelZoom: false
+    }).setView([-23.4866, -46.3487], 16);
+
+    // O MAPA QUE NUNCA FALHA
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        className: 'mapa-real-preto'
+    }).addTo(map);
+
+    // AJUSTA ZOOM AO TERRITÓRIO REAL
+    if (typeof itaquaLayer !== 'undefined') {
+        map.fitBounds(itaquaLayer.getBounds());
+    }
+
+    // MARCADOR CENTRAL
+    L.marker([-23.4866, -46.3487])
+        .addTo(map)
+        .bindPopup('Itaquaquecetuba — Território Soberano');
+
+
+
 function enviarLocalizacao() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(pos => {
