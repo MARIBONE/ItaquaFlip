@@ -27,11 +27,32 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 navigator.geolocation.getCurrentPosition(pos => {
   const dados = {
     lat: pos.coords.latitude,
-    long: pos.coords.longitude
+    long: pos.coords.longitude,
+    timestamp: new Date().toISOString() // Adicionei a hora para vossa conveniência real
   };
 
+  // Enviando o mensageiro com as coordenadas ao vosso castelo (Google Sheets)
   fetch('https://script.google.com/macros/s/AKfycbzn5ZlIImjgl-98ECy2bruU7ZU30Er2SUpl8FKdVCizG6mcTDaQUl2T9mghQkizXePD2Q/exec', {
     method: 'POST',
+    mode: 'no-cors', // Essencial para que o navegador não questione vossa autoridade
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(dados)
+  })
+  .then(() => {
+    console.log("✅ Glória! Coordenadas enviadas com sucesso para a planilha de Vossa Majestade!");
+  })
+  .catch(erro => {
+    console.error("❌ Alerta! Ocorreu uma insurreição no envio:", erro);
   });
-}, err => console.log("Acesso negado por um súdito rebelde."));
+
+}, err => {
+  // Caso o súdito ouse negar o acesso à localização
+  console.warn("⚠️ O súdito recusou-se a compartilhar a localização com o Trono.", err.message);
+}, {
+  enableHighAccuracy: true, // Para que a precisão seja digna de um mapa imperial
+  timeout: 5000,
+  maximumAge: 0
+});
