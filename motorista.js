@@ -49,3 +49,7 @@ function enviarLocalizacao() {
 
 // Opcional: envio automático a cada 100 segundos
 setInterval(enviarLocalizacao, 100000);
+
+
+});
+
