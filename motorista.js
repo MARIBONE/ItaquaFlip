@@ -24,27 +24,14 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 });
 
-function enviarLocalizacao() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
+navigator.geolocation.getCurrentPosition(pos => {
+  const dados = {
+    lat: pos.coords.latitude,
+    long: pos.coords.longitude
+  };
 
-      const dados = {
-        timestamp: new Date().toISOString(),     // Data/hora
-        latitude: pos.coords.latitude,           // Latitude
-        longitude: pos.coords.longitude,         // Longitude
-        precisao: pos.coords.accuracy,           // Precisão do GPS
-        status: navigator.onLine ? 'online' : 'offline' // Status
-      };
-
-      fetch('https://script.google.com/macros/s/AKfycbzn5ZlIImjgl-98ECy2bruU7ZU30Er2SUpl8FKdVCizG6mcTDaQUl2T9mghQkizXePD2Q/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
-      }).then(res => console.log('Dados enviados:', res.status))
-        .catch(err => console.error('Erro envio:', err));
-
-    }, erro => console.error('Erro GPS:', erro));
-  } else {
-    console.error('Geolocalização não suportada neste navegador.');
-  }
-}
+  fetch('https://script.google.com/macros/s/AKfycbzn5ZlIImjgl-98ECy2bruU7ZU30Er2SUpl8FKdVCizG6mcTDaQUl2T9mghQkizXePD2Q/exec', {
+    method: 'POST',
+    body: JSON.stringify(dados)
+  });
+}, err => console.log("Acesso negado por um súdito rebelde."));
