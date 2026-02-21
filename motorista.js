@@ -53,6 +53,6 @@ navigator.geolocation.getCurrentPosition(pos => {
   console.warn("⚠️ O súdito recusou-se a compartilhar a localização com o Trono.", err.message);
 }, {
   enableHighAccuracy: true, // Para que a precisão seja digna de um mapa imperial
-  timeout: 5000,
+  timeout: 10000,
   maximumAge: 0
 });
