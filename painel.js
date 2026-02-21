@@ -34,7 +34,7 @@ function enviarLocalizacao() {
         status: navigator.onLine ? 'online' : 'offline' // Status
       };
 
-      fetch('1FY39DZYwobqf0OY87jrlcNwDt3kDqp5zEbTFXlPmcic/edit?gid=0#gid=0', {
+      fetch('https://script.google.com/macros/s/AKfycbzn5ZlIImjgl-98ECy2bruU7ZU30Er2SUpl8FKdVCizG6mcTDaQUl2T9mghQkizXePD2Q/exec', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dados)
