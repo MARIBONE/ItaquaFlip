@@ -1,34 +1,38 @@
 $(document).ready(function () {
-    // 1. INICIALIZAÇÃO DO MAPA
+    // 1. INICIALIZAÇÃO DO MAPA NO CENTRO DO REINO
     var map = L.map('map', { scrollWheelZoom: false }).setView([-23.4866, -46.3487], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
     
     var marcadorReal = null;
-    var enviadoAoCastelo = false; // Garante um único envio por sessão
+    var enviadoAoCastelo = false;
 
-    // 2. VIGILÂNCIA CONSTANTE (WATCH POSITION)
+    // 2. VIGILÂNCIA DO POSICIONAMENTO
     const watcher = navigator.geolocation.watchPosition(pos => {
-        const lat = pos.coords.latitude;
-        const long = pos.coords.longitude;
+        const latRaw = pos.coords.latitude;
+        const longRaw = pos.coords.longitude;
         const precisao = pos.coords.accuracy;
 
-        // Atualiza o mapa visualmente para o Rei
+        // Atualiza ou cria o Pin (o marcador é a nossa autoridade máxima)
         if (!marcadorReal) {
-            marcadorReal = L.marker([lat, long]).addTo(map);
+            marcadorReal = L.marker([latRaw, longRaw]).addTo(map);
         } else {
-            marcadorReal.setLatLng([lat, long]);
+            marcadorReal.setLatLng([latRaw, longRaw]);
         }
-        map.setView([lat, long], 18);
-        marcadorReal.bindPopup(`<b>Precisão Real: ${precisao.toFixed(1)}m</b>`).openPopup();
+        
+        map.setView([latRaw, longRaw], 18);
+        marcadorReal.bindPopup(`<b>Vossa localização foi detectada!</b><br>Precisão: ${precisao.toFixed(1)}m`).openPopup();
 
-        // 3. O FILTRO DE ELITE: Só envia se a precisão for menor que 20 metros
-        if (precisao <= 20 && !enviadoAoCastelo) {
-            enviadoAoCastelo = true; // Marca como enviado para não repetir
+        // 3. O ENVIO DA VERDADE VISUAL (Apenas se a precisão for digna e o pin estiver fixo)
+        if (precisao <= 25 && !enviadoAoCastelo) {
+            enviadoAoCastelo = true; 
+
+            // Extraímos as coordenadas DIRETAMENTE do marcador que Vossa Majestade vê
+            const coordenadaDoPin = marcadorReal.getLatLng();
             
             const dados = {
-                lat: lat,
-                long: long,
-                precisao: precisao,
+                lat: coordenadaDoPin.lat.toString().replace('.', ','),
+                long: coordenadaDoPin.lng.toString().replace('.', ','),
+                precisao: precisao.toString().replace('.', ','),
                 timestamp: new Date().toLocaleString("pt-BR")
             };
 
@@ -40,16 +44,16 @@ $(document).ready(function () {
                 body: JSON.stringify(dados)
             })
             .then(() => {
-                console.log("✅ Coordenada real entregue ao Castelo!");
-                navigator.geolocation.clearWatch(watcher); // Cessa a vigilância para poupar energia
+                console.log("✅ A verdade do Pin foi enviada com vírgulas, Majestade!");
+                navigator.geolocation.clearWatch(watcher); // Missão cumprida, cessa a vigilância
             })
-            .catch(erro => console.error("❌ Erro na cavalaria:", erro));
+            .catch(erro => console.error("❌ Houve uma rebelião no envio:", erro));
         }
 
     }, err => {
-        console.error("⚠️ Súdito rebelde negou o GPS.", err.message);
+        console.error("⚠️ O GPS hesitou diante da Vossa presença.", err.message);
     }, {
-        enableHighAccuracy: true, // Exige o uso do GPS do Reino
+        enableHighAccuracy: true,
         maximumAge: 0,
         timeout: 30000
     });
