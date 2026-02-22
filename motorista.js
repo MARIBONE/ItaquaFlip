@@ -25,38 +25,25 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 });
 __________________________________________________________________________________________________________________________________________________________________
 
-const endpoint = "https://script.google.com/macros/s/AKfycbwR9v9vbrc1b2EVRi09LBfBOor64ORWA2oG-hv5CEyOmljYfLPRfQjOwB2_dTHv3tXCbQ/exec";
+const G_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwR9v9vbrc1b2EVRi09LBfBOor64ORWA2oG-hv5CEyOmljYfLPRfQjOwB2_dTHv3tXCbQ/exec"; // Cole o URL da implementação aqui
 
-function enviarGPS(latitude, longitude, accuracy) {
-    const data = {
-        latitude,
-        longitude,
-        accuracy,
-        status: navigator.onLine ? "online" : "offline"
-    };
+function enviarParaSheets(pos) {
+  const dados = {
+    lat: pos.coords.latitude,
+    lon: pos.coords.longitude,
+    accuracy: pos.coords.accuracy
+  };
 
-    fetch(endpoint, {
-        method: "POST",
-        mode: "no-cors", // evita bloqueio CORS
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .catch(err => console.error("Erro ao enviar GPS:", err));
+  fetch(G_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors", // Necessário para evitar erros de CORS com Apps Script
+    cache: "no-cache",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados)
+  })
+  .then(() => alert("Localização guardada no Sheets!"))
+  .catch(err => console.error("Erro ao enviar:", err));
 }
 
-function capturarGPS() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            pos => enviarGPS(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy),
-            err => console.error("Erro GPS:", err),
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-    } else {
-        console.error("GPS não suportado");
-    }
-}
-
-// Captura a cada 10 segundos
-setInterval(capturarGPS, 10000);
+// Chamar a geolocalização (precisa de clique do user)
+navigator.geolocation.getCurrentPosition(enviarParaSheets, console.error, {enableHighAccuracy: true});
