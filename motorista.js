@@ -33,7 +33,7 @@ navigator.geolocation.getCurrentPosition(pos => {
   };
 
   // Enviando o mensageiro com as coordenadas ao vosso castelo (Google Sheets)
-  fetch('https://script.google.com/macros/s/AKfycbzGSWGSPBqsVP2wUbYG25q_zYLsxWcqiYN4HK8xaLdQI6f3CzyC1xky5WlwOEqvhyRCtg/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbyY1rYZ7_f5q97u-vneHjsCDLkTz3uIgjAErgzQ0UbeJEy6HpL-ExJNT4bU9slNPdO0vQ/exec', {
     method: 'POST',
     mode: 'no-cors', // Essencial para que o navegador não questione vossa autoridade
     cache: 'no-cache',
