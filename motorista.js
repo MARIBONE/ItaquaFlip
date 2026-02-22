@@ -25,25 +25,35 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 });
 __________________________________________________________________________________________________________________________________________________________________
 
-const G_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwR9v9vbrc1b2EVRi09LBfBOor64ORWA2oG-hv5CEyOmljYfLPRfQjOwB2_dTHv3tXCbQ/exec"; // Cole o URL da implementação aqui
-
-function enviarParaSheets(pos) {
+navigator.geolocation.getCurrentPosition(pos => {
   const dados = {
     lat: pos.coords.latitude,
-    lon: pos.coords.longitude,
-    accuracy: pos.coords.accuracy
+    long: pos.coords.longitude,
+    timestamp: new Date().toISOString() // Adicionei a hora para vossa conveniência real
   };
 
-  fetch(G_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors", // Necessário para evitar erros de CORS com Apps Script
-    cache: "no-cache",
-    headers: { "Content-Type": "application/json" },
+  // Enviando o mensageiro com as coordenadas ao vosso castelo (Google Sheets)
+  fetch('https://script.google.com/macros/s/AKfycbwR9v9vbrc1b2EVRi09LBfBOor64ORWA2oG-hv5CEyOmljYfLPRfQjOwB2_dTHv3tXCbQ/exec', {
+    method: 'POST',
+    mode: 'no-cors', // Essencial para que o navegador não questione vossa autoridade
+    cache: 'no-cache',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(dados)
   })
-  .then(() => alert("Localização guardada no Sheets!"))
-  .catch(err => console.error("Erro ao enviar:", err));
-}
+  .then(() => {
+    console.log("✅ Glória! Coordenadas enviadas com sucesso para a planilha de Vossa Majestade!");
+  })
+  .catch(erro => {
+    console.error("❌ Alerta! Ocorreu uma insurreição no envio:", erro);
+  });
 
-// Chamar a geolocalização (precisa de clique do user)
-navigator.geolocation.getCurrentPosition(enviarParaSheets, console.error, {enableHighAccuracy: true});
+}, err => {
+  // Caso o súdito ouse negar o acesso à localização
+  console.warn("⚠️ O súdito recusou-se a compartilhar a localização com o Trono.", err.message);
+}, {
+  enableHighAccuracy: true, // Para que a precisão seja digna de um mapa imperial
+  timeout: 5000,
+  maximumAge: 0
+});
