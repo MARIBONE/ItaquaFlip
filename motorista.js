@@ -23,7 +23,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         .bindPopup('Itaquaquecetuba — Território Soberano');
 
 });
-__________________________________________________________________________________________________________________________________________________________________
 
 function enviarLocalizacao() {
   if (navigator.geolocation) {
