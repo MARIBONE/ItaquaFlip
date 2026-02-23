@@ -25,35 +25,27 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 });
 __________________________________________________________________________________________________________________________________________________________________
 
-navigator.geolocation.getCurrentPosition(pos => {
-  const dados = {
-    lat: pos.coords.latitude,
-    long: pos.coords.longitude,
-    timestamp: new Date().toISOString() // Adicionei a hora para vossa conveniência real
-  };
+function enviarLocalizacao() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
 
-  // Enviando o mensageiro com as coordenadas ao vosso castelo (Google Sheets)
-  fetch('https://script.google.com/macros/s/AKfycbyY1rYZ7_f5q97u-vneHjsCDLkTz3uIgjAErgzQ0UbeJEy6HpL-ExJNT4bU9slNPdO0vQ/exec', {
-    method: 'POST',
-    mode: 'no-cors', // Essencial para que o navegador não questione vossa autoridade
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(dados)
-  })
-  .then(() => {
-    console.log("✅ Glória! Coordenadas enviadas com sucesso para a planilha de Vossa Majestade!");
-  })
-  .catch(erro => {
-    console.error("❌ Alerta! Ocorreu uma insurreição no envio:", erro);
-  });
+      const dados = {
+        timestamp: new Date().toISOString(),     // Data/hora
+        latitude: pos.coords.latitude,           // Latitude
+        longitude: pos.coords.longitude,         // Longitude
+        precisao: pos.coords.accuracy,           // Precisão do GPS
+        status: navigator.onLine ? 'online' : 'offline' // Status
+      };
 
-}, err => {
-  // Caso o súdito ouse negar o acesso à localização
-  console.warn("⚠️ O súdito recusou-se a compartilhar a localização com o Trono.", err.message);
-}, {
-  enableHighAccuracy: true, // Para que a precisão seja digna de um mapa imperial
-  timeout: 5000,
-  maximumAge: 0
-});
+      fetch('https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/execT', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      }).then(res => console.log('Dados enviados:', res.status))
+        .catch(err => console.error('Erro envio:', err));
+
+    }, erro => console.error('Erro GPS:', erro));
+  } else {
+    console.error('Geolocalização não suportada neste navegador.');
+  }
+}
