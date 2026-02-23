@@ -1,7 +1,11 @@
+let map;
+let marker;
+let currentPosition;
+
 $(document).ready(function () {
 
-    // MAPA — Base sólida do reino
-    var map = L.map('map', {
+    // MAPA — Base sólida
+    map = L.map('map', {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
@@ -10,17 +14,17 @@ $(document).ready(function () {
         className: 'mapa-real-preto'
     }).addTo(map);
 
-    // MARCADOR CENTRAL
+    // MARCADOR CENTRAL fixo
     L.marker([-23.4866, -46.3487])
         .addTo(map)
         .bindPopup('Itaquaquecetuba — Território Soberano')
         .openPopup();
 
+    // 🚀 Inicia rastreamento assim que o documento carrega
+    iniciarRastreamento();
 });
 
 
-let marker;
-let currentPosition;
 
 function iniciarRastreamento() {
     if (!navigator.geolocation) {
@@ -28,6 +32,7 @@ function iniciarRastreamento() {
         return;
     }
 
+    // ⚡ Solicita permissão GPS e acompanha mudanças
     navigator.geolocation.watchPosition(
         function(position) {
             currentPosition = {
@@ -35,7 +40,10 @@ function iniciarRastreamento() {
                 lng: position.coords.longitude
             };
 
+            // Atualiza o marker do motorista
             atualizarMapa(currentPosition);
+
+            // Envia para planilha via Apps Script
             enviarParaBackend(currentPosition);
 
         },
@@ -52,7 +60,8 @@ function iniciarRastreamento() {
 
 function atualizarMapa(pos) {
     if (!marker) {
-        marker = L.marker([pos.lat, pos.lng]).addTo(map)
+        marker = L.marker([pos.lat, pos.lng])
+            .addTo(map)
             .bindPopup('Motorista Atual')
             .openPopup();
         map.setView([pos.lat, pos.lng], 16);
