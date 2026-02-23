@@ -24,27 +24,57 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 });
 
-function enviarLocalizacao() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
 
-      const dados = {
-        timestamp: new Date().toISOString(),     // Data/hora
-        latitude: pos.coords.latitude,           // Latitude
-        longitude: pos.coords.longitude,         // Longitude
-        precisao: pos.coords.accuracy,           // Precisão do GPS
-        status: navigator.onLine ? 'online' : 'offline' // Status
-      };
+let marker;
+let currentPosition;
 
-      fetch('https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/execT', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
-      }).then(res => console.log('Dados enviados:', res.status))
-        .catch(err => console.error('Erro envio:', err));
+function iniciarRastreamento() {
+    if (!navigator.geolocation) {
+        alert("GPS não disponível");
+        return;
+    }
 
-    }, erro => console.error('Erro GPS:', erro));
-  } else {
-    console.error('Geolocalização não suportada neste navegador.');
-  }
+    navigator.geolocation.watchPosition(
+        function(position) {
+            currentPosition = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            atualizarMapa(currentPosition);
+            enviarParaBackend(currentPosition);
+
+        },
+        function(error) {
+            console.error("Erro GPS:", error);
+        },
+        {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 10000
+        }
+    );
+}
+
+
+function atualizarMapa(pos) {
+    if (!marker) {
+        marker = L.marker([pos.lat, pos.lng]).addTo(map);
+        map.setView([pos.lat, pos.lng], 16);
+    } else {
+        marker.setLatLng([pos.lat, pos.lng]);
+    }
+}
+
+
+function enviarParaBackend(pos) {
+    fetch("https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/exec", {
+        method: "POST",
+        body: JSON.stringify({
+            lat: pos.lat,
+            lng: pos.lng,
+            timestamp: new Date().toISOString()
+        }),
+        headers: { "Content-Type": "application/json" }
+    });
 }
