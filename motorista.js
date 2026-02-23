@@ -70,15 +70,29 @@ function atualizarMapa(pos) {
     }
 }
 
-function enviarParaBackend(pos) {
-    fetch("https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/exec", {
-        method: "POST",
-        body: JSON.stringify({
-            lat: pos.lat,
-            lng: pos.lng,
-            timestamp: new Date().toISOString(),
-            status: "online"
-        }),
-        headers: { "Content-Type": "application/json" }
-    }).catch(err => console.log("Aviso: não é possível ler resposta por CORS, mas dados enviados"));
+function enviarParaBackendForm(pos) {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/exec";
+    form.style.display = "none";
+
+    // Campos do form
+    const latInput = document.createElement("input");
+    latInput.name = "lat";
+    latInput.value = pos.lat;
+    form.appendChild(latInput);
+
+    const lngInput = document.createElement("input");
+    lngInput.name = "lng";
+    lngInput.value = pos.lng;
+    form.appendChild(lngInput);
+
+    const tsInput = document.createElement("input");
+    tsInput.name = "timestamp";
+    tsInput.value = new Date().toISOString();
+    form.appendChild(tsInput);
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 }
