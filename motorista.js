@@ -80,8 +80,5 @@ function enviarParaBackend(pos) {
             status: "online"
         }),
         headers: { "Content-Type": "application/json" }
-    })
-    .then(resp => resp.json())
-    .then(data => console.log("Enviado:", data))
-    .catch(err => console.error("Erro envio:", err));
+    }).catch(err => console.log("Aviso: não é possível ler resposta por CORS, mas dados enviados"));
 }
