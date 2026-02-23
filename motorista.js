@@ -69,26 +69,25 @@ $(document).ready(function () {
     }
 
     function enviarParaBackendForm(pos) {
-        const form = document.createElement("form");
-        form.method = "POST";
-        form.action = "https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/exec";
-        form.style.display = "none";
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://script.google.com/macros/s/AKfycbyJumsnPVeASMTsv9ZAFCRmX99MU_GvyMQWgZiBecvHHXNQnw_X-9Lb0xlkThRvnVNEhA/exec";
+    form.style.display = "none";
 
-        const campos = {
-            lat: pos.lat,
-            lng: pos.lng,
-            timestamp: new Date().toISOString()
-        };
+    const campos = {
+        lat: pos.lat,
+        lng: pos.lng,
+        timestamp: new Date().toISOString()
+    };
 
-        for (let key in campos) {
-            const input = document.createElement("input");
-            input.name = key;
-            input.value = campos[key];
-            form.appendChild(input);
-        }
-
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
+    for (let key in campos) {
+        const input = document.createElement("input");
+        input.name = key;
+        input.value = campos[key];
+        form.appendChild(input);
     }
-});
+
+    document.body.appendChild(form);
+    form.submit(); // ⚡ Envia via POST como form → CORS não bloqueia
+    document.body.removeChild(form);
+}
