@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    // 1️⃣ Cria o mapa
+    // 1️⃣ Inicializa o mapa
     var map = L.map('map', {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
@@ -17,16 +17,16 @@ $(document).ready(function () {
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
 
-                // 3️⃣ Cria o pin no mapa
+                // 3️⃣ Coloca o pin no mapa
                 L.marker([lat, lng])
                     .addTo(map)
-                    .bindPopup("Seu Local")
+                    .bindPopup("Você está aqui 📍")
                     .openPopup();
 
-                // 4️⃣ Centraliza o mapa na posição do usuário
+                // 4️⃣ Centraliza mapa na posição do usuário
                 map.setView([lat, lng], 17);
 
-                // 5️⃣ Envia os dados para o Google Sheets (sem ler a resposta)
+                // 5️⃣ Envia dados para o Google Sheets via FormData
                 var form = new FormData();
                 form.append("latitude", lat);
                 form.append("longitude", lng);
@@ -35,8 +35,7 @@ $(document).ready(function () {
                     method: "POST",
                     body: form
                 });
-                // ❌ NÃO usar .then() ou .catch() para ler retorno
-                // isso evita o erro de CORS
+                // ❌ sem .then() para ler resposta, evita CORS
 
             },
             function(error) {
