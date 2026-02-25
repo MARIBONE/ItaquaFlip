@@ -44,7 +44,7 @@ $(document).ready(function () {
                     status: navigator.onLine ? 'online' : 'offline'
                 };
 
-                fetch('SUA_URL_DO_APPS_SCRIPT_AQUI', {
+                fetch('https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec', {
                     method: 'POST',
                     mode: 'no-cors', // evita CORS
                     headers: { 'Content-Type': 'application/json' },
