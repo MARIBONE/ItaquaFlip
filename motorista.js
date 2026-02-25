@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                // Coordenadas reais do GPS
+                // Coordenadas concedidas pelo súdito
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
 
@@ -28,27 +28,23 @@ $(document).ready(function () {
                     .bindPopup("SEU LOCAL")
                     .openPopup();
 
-                // Centraliza mapa na posição do marker
                 map.setView([lat, lng], 17);
 
-                // PEGAMOS EXATAMENTE DO PIN
+                // PEGANDO EXATAMENTE DO PIN
                 var pinLat = marker.getLatLng().lat;
                 var pinLng = marker.getLatLng().lng;
 
-                // Envio direto para o Google Sheets
-                const dados = {
-                    timestamp: new Date().toISOString(),
-                    latitude: pinLat,
-                    longitude: pinLng,
-                    precisao: position.coords.accuracy,
-                    status: navigator.onLine ? 'online' : 'offline'
-                };
+                // Envio direto para o Google Sheets via FormData
+                var form = new FormData();
+                form.append("latitude", pinLat);
+                form.append("longitude", pinLng);
+                form.append("timestamp", new Date().toISOString());
+                form.append("precisao", position.coords.accuracy);
+                form.append("status", navigator.onLine ? 'online' : 'offline');
 
                 fetch('https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec', {
                     method: 'POST',
-                    mode: 'no-cors', // evita CORS
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dados)
+                    body: form
                 }).then(() => console.log("Dados do pin enviados com sucesso."));
 
             },
