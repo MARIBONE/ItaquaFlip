@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+    // 1️⃣ Cria o mapa
     var map = L.map('map', {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
@@ -8,37 +9,42 @@ $(document).ready(function () {
         maxZoom: 19
     }).addTo(map);
 
-    navigator.geolocation.getCurrentPosition(
-        function(position) {
+    // 2️⃣ Pede permissão de GPS
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
 
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
 
-            L.marker([lat, lng])
-                .addTo(map)
-                .bindPopup("SEU LOCAL")
-                .openPopup();
+                // 3️⃣ Cria o pin no mapa
+                L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup("SEU LOCAL")
+                    .openPopup();
 
-            map.setView([lat, lng], 17);
+                // 4️⃣ Centraliza o mapa na posição do usuário
+                map.setView([lat, lng], 17);
 
-            fetch("https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    latitude: lat,
-                    longitude: lng
+                // 5️⃣ Envia os dados para o Google Sheets usando FormData (sem CORS)
+                var form = new FormData();
+                form.append("latitude", lat);
+                form.append("longitude", lng);
+
+                fetch("https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec", {
+                    method: "POST",
+                    body: form
                 })
-            })
-            .then(response => response.json())
-            .then(data => console.log("Enviado com sucesso:", data))
-            .catch(error => console.error("Erro ao enviar:", error));
+                .then(() => console.log("Dados enviados com sucesso"))
+                .catch(err => console.error("Erro ao enviar:", err));
 
-        },
-        function(error) {
-            console.error("Erro na geolocalização:", error);
-        }
-    );
+            },
+            function(error) {
+                console.error("Erro na geolocalização:", error);
+            }
+        );
+    } else {
+        console.error("Geolocalização não suportada neste navegador.");
+    }
 
 });
