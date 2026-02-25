@@ -20,13 +20,13 @@ $(document).ready(function () {
                 // 3️⃣ Cria o pin no mapa
                 L.marker([lat, lng])
                     .addTo(map)
-                    .bindPopup("SEU LOCAL")
+                    .bindPopup("Seu Local")
                     .openPopup();
 
                 // 4️⃣ Centraliza o mapa na posição do usuário
                 map.setView([lat, lng], 17);
 
-                // 5️⃣ Envia os dados para o Google Sheets usando FormData (sem CORS)
+                // 5️⃣ Envia os dados para o Google Sheets (sem ler a resposta)
                 var form = new FormData();
                 form.append("latitude", lat);
                 form.append("longitude", lng);
@@ -34,9 +34,9 @@ $(document).ready(function () {
                 fetch("https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec", {
                     method: "POST",
                     body: form
-                })
-                .then(() => console.log("Dados enviados com sucesso"))
-                .catch(err => console.error("Erro ao enviar:", err));
+                });
+                // ❌ NÃO usar .then() ou .catch() para ler retorno
+                // isso evita o erro de CORS
 
             },
             function(error) {
