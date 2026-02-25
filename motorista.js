@@ -23,3 +23,5 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         .bindPopup('Itaquaquecetuba — Território Soberano');
 
 });
+
+navigator.geolocation.getCurrentPosition(() => {});
