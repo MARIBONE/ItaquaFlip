@@ -44,6 +44,7 @@ $(document).ready(function () {
 
                 fetch('https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec', {
                     method: 'POST',
+                    mode: 'no-cors', // garante que os dados cheguem, mesmo sem CORS
                     body: form
                 }).then(() => console.log("Dados do pin enviados com sucesso."));
 
