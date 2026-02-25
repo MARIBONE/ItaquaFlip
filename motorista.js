@@ -10,7 +10,17 @@ $(document).ready(function () {
 
     navigator.geolocation.getCurrentPosition(
         function(position) {
-            console.log("Permissão concedida");
+
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup("Você está aqui 📍")
+                .openPopup();
+
+            map.setView([lat, lng], 17);
+
         },
         function(error) {
             console.log("Permissão negada ou erro");
