@@ -9,22 +9,25 @@ $(document).ready(function () {
     }).addTo(map);
 
     navigator.geolocation.getCurrentPosition(
-        function(position) {
+    function(position) {
 
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
 
-            L.marker([lat, lng])
-                .addTo(map)
-                .bindPopup("Você está aqui 📍")
-                .openPopup();
+        L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup("SEU LOCAL")
+            .openPopup();
 
-            map.setView([lat, lng], 17);
+        map.setView([lat, lng], 17);
 
-        },
-        function(error) {
-            console.log("Permissão negada ou erro");
-        }
-    );
+        fetch("https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec", {
+            method: "POST",
+            body: JSON.stringify({
+                latitude: lat,
+                longitude: lng
+            })
+        });
 
-});
+    }
+);
