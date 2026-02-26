@@ -25,7 +25,7 @@ $(document).ready(function () {
                 // Marker e popup permanecem para visualização
                 L.marker([lat, lng])
                     .addTo(map)
-                    .bindPopup("SEU LOCAL")
+                    .bindPopup("Seu Local")
                     .openPopup();
 
                 map.setView([lat, lng], 17);
