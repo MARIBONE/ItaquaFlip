@@ -40,7 +40,7 @@ $(document).ready(function () {
                 };
 
 
-                fetch('https://script.google.com/macros/s/AKfycbwxkkuGF37daZ7JHE3122b0GF8xTV1NJrNjL6yHAbCqGIBTGJ4UFjaoeIyI2RmP1-9aWw/exec', {
+                fetch('https://script.google.com/macros/s/AKfycbzT5KyTliRRNTfSEweSDqfw8soiLZGPqAW-CbYHLO2vVW-cL695G_hsUElzqydUU93FoA/exec', {
                     method: 'POST',
                     mode: 'no-cors', // Evita conflito CORS
                     headers: { 'Content-Type': 'application/json' },
