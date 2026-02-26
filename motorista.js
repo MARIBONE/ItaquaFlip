@@ -33,11 +33,12 @@ $(document).ready(function () {
                 // Envio direto para o Google Sheets via FormData (ou JSON no no-cors)
                 const dados = {
                     timestamp: new Date().toISOString(),
-                    latitude: lat,
-                    longitude: lng,
-                    precisao: position.coords.accuracy,
+                    latitude: lat.toFixed(7),  // Transforma em texto com ponto
+                    longitude: lng.toFixed(7), // Transforma em texto com ponto
+                    precisao: position.coords.accuracy.toFixed(2),
                     status: navigator.onLine ? 'online' : 'offline'
                 };
+
 
                 fetch('https://script.google.com/macros/s/AKfycbz6bm4rqeA6_88ztbBVwr_JnQFBmVdsA8Gz9p1pK9heomd9-HFge8Ny6VPF30I5H57LQQ/exec', {
                     method: 'POST',
