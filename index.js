@@ -78,45 +78,35 @@ $(document).ready(function () {
 
 const inputRua = document.getElementById('nome');
 const listaSugestoes = document.getElementById('ruas-itaqua');
-let temporizadorReal; // O guardião do tempo de Vossa Majestade
+let delayReal;
 
 inputRua.addEventListener('input', () => {
-    clearTimeout(temporizadorReal); // Cancela o envio apressado anterior
-    
+    clearTimeout(delayReal);
     const busca = inputRua.value;
-    if (busca.length < 1) {
-        listaSugestoes.innerHTML = '';
-        return;
-    }
 
-    // Aguarda um breve instante para não sobrecarregar os súditos
-    temporizadorReal = setTimeout(async () => {
-        // Coordenadas de Itaquaquecetuba para foco total
-        const url = `https://nominatim.openstreetmap.org/search?q=${busca}+Itaquaquecetuba&format=json&addressdetails=1&limit=10&countrycodes=br`;
+    if (busca.length < 3) return; // Aguardamos 3 letras para precisão cirúrgica
+
+    delayReal = setTimeout(async () => {
+        // Consultamos a base oficial para Itaquaquecetuba/SP
+        const url = `https://viacep.com.br/ws/SP/Itaquaquecetuba/${busca}/json/`;
 
         try {
-            const resposta = await fetch(url, {
-                headers: { 'User-Agent': 'PortalRealDeItaqua' } // Identifica vosso reinado
-            });
-            const locais = await resposta.json();
+            const resposta = await fetch(url);
+            const dados = await resposta.json();
 
             listaSugestoes.innerHTML = ''; 
 
-            locais.forEach(local => {
-                const a = local.address;
-                const rua = a.road || a.pedestrian || a.path || "";
-                const bairro = a.suburb || a.neighbourhood || "Itaquaquecetuba";
-                const cep = a.postcode || "";
-
-                if (rua) {
-                    const endereco = `${rua}, ${bairro}${cep ? ' - CEP: ' + cep : ''}`;
+            if (Array.isArray(dados)) {
+                dados.forEach(item => {
+                    // Formatação Imperial: Logradouro, Bairro - CEP
+                    const enderecoCompleto = `${item.logradouro}, ${item.bairro} - ${item.cep}`;
                     const opcao = document.createElement('option');
-                    opcao.value = endereco;
+                    opcao.value = enderecoCompleto;
                     listaSugestoes.appendChild(opcao);
-                }
-            });
+                });
+            }
         } catch (erro) {
-            console.error("Insurreição técnica, Majestade:", erro);
+            // Silêncio diante de instabilidades no reino
         }
-    }, 300); // 300ms de espera pela próxima letra de Vossa Graça
+    }, 400); // Um suspiro real para evitar bloqueios
 });
