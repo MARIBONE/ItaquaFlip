@@ -76,3 +76,33 @@ $(document).ready(function () {
 });
 
 
+const inputRua = document.getElementById('nome');
+const listaSugestoes = document.getElementById('ruas-itaqua');
+
+// Ouve cada letra que Vossa Majestade digita
+inputRua.addEventListener('input', async () => {
+    const busca = inputRua.value;
+
+    // Só incomodamos os mensageiros se houver 3 ou mais letras
+    if (busca.length < 3) return;
+
+    // A carruagem que busca os nomes das ruas em Itaquaquecetuba
+    const url = `https://nominatim.openstreetmap.org/search?street=${busca}&city=Itaquaquecetuba&format=json&addressdetails=1&limit=5`;
+
+    try {
+        const resposta = await fetch(url);
+        const ruas = await resposta.json();
+
+        // Limpa as sugestões antigas para dar lugar às novas
+        listaSugestoes.innerHTML = '';
+
+        ruas.forEach(local => {
+            const nomeDaRua = local.address.road || local.display_name.split(',')[0];
+            const opcao = document.createElement('option');
+            opcao.value = nomeDaRua;
+            listaSugestoes.appendChild(opcao);
+        });
+    } catch (erro) {
+        // Silêncio em caso de erro, para não irritar o Trono
+    }
+});
