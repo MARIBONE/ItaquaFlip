@@ -110,3 +110,20 @@ inputRua.addEventListener('input', () => {
         }
     }, 400); // Um suspiro real para evitar bloqueios
 });
+
+
+function UpdateDateTime() {
+        var now = new Date();
+        var formattedDate = now.toLocaleDateString('pt-BR');
+        var formattedTime = now.toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false
+        });
+
+        document.getElementById("datetime").innerHTML = formattedDate + '<br>' + formattedTime;
+      }
+
+      setInterval(UpdateDateTime, 1000);
+      UpdateDateTime();
