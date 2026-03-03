@@ -78,38 +78,45 @@ $(document).ready(function () {
 
 const inputRua = document.getElementById('nome');
 const listaSugestoes = document.getElementById('ruas-itaqua');
+let temporizadorReal; // O guardião do tempo de Vossa Majestade
 
-inputRua.addEventListener('input', async () => {
+inputRua.addEventListener('input', () => {
+    clearTimeout(temporizadorReal); // Cancela o envio apressado anterior
+    
     const busca = inputRua.value;
-
-    // Agora, ao primeiro sinal de Vossa Majestade (1 letra), o reino trabalha!
-    if (busca.length < 1) return;
-
-    // Coordenadas reais de Itaquaquecetuba para cercar a busca no vosso mapa
-    const viewbox = "-46.3815,-23.5134,-46.3056,-23.4455"; 
-    const url = `https://nominatim.openstreetmap.org/search?q=${busca}&city=Itaquaquecetuba&state=São Paulo&country=Brazil&format=json&addressdetails=1&limit=10&viewbox=${viewbox}&bounded=1`;
-
-    try {
-        const resposta = await fetch(url);
-        const locais = await resposta.json();
-
-        listaSugestoes.innerHTML = ''; 
-
-        locais.forEach(local => {
-            const a = local.address;
-            
-            // Construção do Endereço de Gala: Rua, Bairro, CEP
-            const rua = a.road || a.pedestrian || a.suburb || local.display_name.split(',')[0];
-            const bairro = a.neighbourhood || a.suburb || "Itaquaquecetuba";
-            const cep = a.postcode ? ` - CEP: ${a.postcode}` : "";
-            
-            const enderecoCompleto = `${rua}, ${bairro}${cep}`;
-            
-            const opcao = document.createElement('option');
-            opcao.value = enderecoCompleto;
-            listaSugestoes.appendChild(opcao);
-        });
-    } catch (erro) {
-        // Ocultamos as falhas dos mensageiros de Vossa Graça
+    if (busca.length < 1) {
+        listaSugestoes.innerHTML = '';
+        return;
     }
+
+    // Aguarda um breve instante para não sobrecarregar os súditos
+    temporizadorReal = setTimeout(async () => {
+        // Coordenadas de Itaquaquecetuba para foco total
+        const url = `https://nominatim.openstreetmap.org/search?q=${busca}+Itaquaquecetuba&format=json&addressdetails=1&limit=10&countrycodes=br`;
+
+        try {
+            const resposta = await fetch(url, {
+                headers: { 'User-Agent': 'PortalRealDeItaqua' } // Identifica vosso reinado
+            });
+            const locais = await resposta.json();
+
+            listaSugestoes.innerHTML = ''; 
+
+            locais.forEach(local => {
+                const a = local.address;
+                const rua = a.road || a.pedestrian || a.path || "";
+                const bairro = a.suburb || a.neighbourhood || "Itaquaquecetuba";
+                const cep = a.postcode || "";
+
+                if (rua) {
+                    const endereco = `${rua}, ${bairro}${cep ? ' - CEP: ' + cep : ''}`;
+                    const opcao = document.createElement('option');
+                    opcao.value = endereco;
+                    listaSugestoes.appendChild(opcao);
+                }
+            });
+        } catch (erro) {
+            console.error("Insurreição técnica, Majestade:", erro);
+        }
+    }, 300); // 300ms de espera pela próxima letra de Vossa Graça
 });
