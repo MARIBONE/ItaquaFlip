@@ -79,30 +79,39 @@ $(document).ready(function () {
 const inputRua = document.getElementById('nome');
 const listaSugestoes = document.getElementById('ruas-itaqua');
 
-// Ouve cada letra que Vossa Majestade digita
 inputRua.addEventListener('input', async () => {
     const busca = inputRua.value;
 
-    // Só incomodamos os mensageiros se houver 3 ou mais letras
+    // Aguardamos 3 letras para não sobrecarregar os mensageiros do reino
     if (busca.length < 3) return;
 
-    // A carruagem que busca os nomes das ruas em Itaquaquecetuba
-    const url = `https://nominatim.openstreetmap.org/search?street=${busca}&city=Itaquaquecetuba&format=json&addressdetails=1&limit=5`;
+    // Ampliamos a busca para encontrar TUDO em Itaquaquecetuba
+    const url = `https://nominatim.openstreetmap.org/search?q=${busca},Itaquaquecetuba&format=json&addressdetails=1&limit=8&countrycodes=br`;
 
     try {
         const resposta = await fetch(url);
-        const ruas = await resposta.json();
+        const locais = await resposta.json();
 
-        // Limpa as sugestões antigas para dar lugar às novas
-        listaSugestoes.innerHTML = '';
+        listaSugestoes.innerHTML = ''; // Limpamos o passado
 
-        ruas.forEach(local => {
-            const nomeDaRua = local.address.road || local.display_name.split(',')[0];
-            const opcao = document.createElement('option');
-            opcao.value = nomeDaRua;
-            listaSugestoes.appendChild(opcao);
+        locais.forEach(local => {
+            const addr = local.address;
+            
+            // Construímos o endereço completo: Rua, Bairro, Cidade - CEP
+            const rua = addr.road || addr.pedestrian || "";
+            const bairro = addr.suburb || addr.neighbourhood || "";
+            const cidade = addr.city || addr.town || "Itaquaquecetuba";
+            const cep = addr.postcode || "";
+
+            // Só exibimos se houver ao menos o nome da rua
+            if (rua) {
+                const enderecoCompleto = `${rua}, ${bairro}, ${cidade} - ${cep}`;
+                const opcao = document.createElement('option');
+                opcao.value = enderecoCompleto;
+                listaSugestoes.appendChild(opcao);
+            }
         });
     } catch (erro) {
-        // Silêncio em caso de erro, para não irritar o Trono
+        // Silêncio diante das falhas técnicas
     }
 });
