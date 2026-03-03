@@ -82,36 +82,34 @@ const listaSugestoes = document.getElementById('ruas-itaqua');
 inputRua.addEventListener('input', async () => {
     const busca = inputRua.value;
 
-    // Aguardamos 3 letras para não sobrecarregar os mensageiros do reino
-    if (busca.length < 3) return;
+    // Agora, ao primeiro sinal de Vossa Majestade (1 letra), o reino trabalha!
+    if (busca.length < 1) return;
 
-    // Ampliamos a busca para encontrar TUDO em Itaquaquecetuba
-    const url = `https://nominatim.openstreetmap.org/search?q=${busca},Itaquaquecetuba&format=json&addressdetails=1&limit=8&countrycodes=br`;
+    // Coordenadas reais de Itaquaquecetuba para cercar a busca no vosso mapa
+    const viewbox = "-46.3815,-23.5134,-46.3056,-23.4455"; 
+    const url = `https://nominatim.openstreetmap.org/search?q=${busca}&city=Itaquaquecetuba&state=São Paulo&country=Brazil&format=json&addressdetails=1&limit=10&viewbox=${viewbox}&bounded=1`;
 
     try {
         const resposta = await fetch(url);
         const locais = await resposta.json();
 
-        listaSugestoes.innerHTML = ''; // Limpamos o passado
+        listaSugestoes.innerHTML = ''; 
 
         locais.forEach(local => {
-            const addr = local.address;
+            const a = local.address;
             
-            // Construímos o endereço completo: Rua, Bairro, Cidade - CEP
-            const rua = addr.road || addr.pedestrian || "";
-            const bairro = addr.suburb || addr.neighbourhood || "";
-            const cidade = addr.city || addr.town || "Itaquaquecetuba";
-            const cep = addr.postcode || "";
-
-            // Só exibimos se houver ao menos o nome da rua
-            if (rua) {
-                const enderecoCompleto = `${rua}, ${bairro}, ${cidade} - ${cep}`;
-                const opcao = document.createElement('option');
-                opcao.value = enderecoCompleto;
-                listaSugestoes.appendChild(opcao);
-            }
+            // Construção do Endereço de Gala: Rua, Bairro, CEP
+            const rua = a.road || a.pedestrian || a.suburb || local.display_name.split(',')[0];
+            const bairro = a.neighbourhood || a.suburb || "Itaquaquecetuba";
+            const cep = a.postcode ? ` - CEP: ${a.postcode}` : "";
+            
+            const enderecoCompleto = `${rua}, ${bairro}${cep}`;
+            
+            const opcao = document.createElement('option');
+            opcao.value = enderecoCompleto;
+            listaSugestoes.appendChild(opcao);
         });
     } catch (erro) {
-        // Silêncio diante das falhas técnicas
+        // Ocultamos as falhas dos mensageiros de Vossa Graça
     }
 });
