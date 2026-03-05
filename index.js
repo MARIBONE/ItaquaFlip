@@ -127,3 +127,74 @@ function UpdateDateTime() {
 
       setInterval(UpdateDateTime, 1000);
       UpdateDateTime();
+
+
+// --- INTEGRAÇÃO REAL DO BOTÃO "INICIAR VIAGEM" ---
+
+async function enviarParaOTrono() {
+    const destinoInput = document.getElementById('nome').value;
+
+    if (!destinoInput) {
+        alert("Soberano, por favor, indique o destino no campo de busca!");
+        return;
+    }
+
+    // 1. Capturamos o GPS na hora para garantir precisão total
+    navigator.geolocation.getCurrentPosition(async (posicao) => {
+        const latOri = posicao.coords.latitude;
+        const lonOri = posicao.coords.longitude;
+
+        try {
+            // 2. Transformamos o texto do Input em coordenadas (Nominatim)
+            // Usamos Itaquaquecetuba como âncora para não sair do reino
+            const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}+Itaquaquecetuba&format=json&limit=1`);
+            const locais = await busca.json();
+
+            if (locais.length === 0) {
+                alert("Majestade, este local não foi encontrado nos mapas de Itaquá.");
+                return;
+            }
+
+            const latDest = locais[0].lat;
+            const lonDest = locais[0].lon;
+
+            // 3. Consultando o OSRM para traçar a rota real
+            const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${lonOri},${latOri};${lonDest},${latDest}?overview=full&geometries=geojson`;
+            const resRota = await fetch(urlOSRM);
+            const dadosRota = await resRota.json();
+
+            if (dadosRota.routes && dadosRota.routes.length > 0) {
+                // Buscamos o mapa que Vossa Majestade já inicializou lá em cima
+                // O Leaflet guarda a instância no DOM; vamos acessá-la com elegância
+                const mapaReal = document.getElementById('map')._leaflet_map || map; 
+
+                // Limpamos rotas anteriores se existirem
+                if (window.camadaDaJornada) {
+                    mapaReal.removeLayer(window.camadaDaJornada);
+                }
+
+                // 4. Desenhamos a Rota Verde (Cor do ItaquaFlip!)
+                window.camadaDaJornada = L.geoJSON(dadosRota.routes[0].geometry, {
+                    style: { color: '#4cbb17', weight: 8, opacity: 0.9 }
+                }).addTo(mapaReal);
+
+                // Ajustamos a visão para o Rei contemplar todo o trajeto
+                mapaReal.fitBounds(window.camadaDaJornada.getBounds());
+
+                // Marcador no Destino
+                L.marker([latDest, lonDest]).addTo(mapaReal)
+                    .bindPopup(`<b>Destino Real:</b><br>${destinoInput}`)
+                    .openPopup();
+
+            } else {
+                alert("Os caminhos estão obstruídos, não conseguimos traçar a rota.");
+            }
+
+        } catch (erro) {
+            console.error("Falha na comunicação imperial:", erro);
+            alert("Houve um erro ao consultar os mapas do reino.");
+        }
+    }, () => {
+        alert("Majestade, precisamos que o GPS esteja ativo para traçar a rota!");
+    });
+}
