@@ -3,7 +3,7 @@ var map; // Agora o Reino todo sabe quem ele é!
 $(document).ready(function () {
 
     // MAPA DO TERRITÓRIO REAL
-    var map = L.map('map', {
+    map = L.map('map', {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
