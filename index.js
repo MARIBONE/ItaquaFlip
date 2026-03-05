@@ -1,9 +1,10 @@
-var map; // Agora o Reino todo sabe quem ele é!
+var map; // A autoridade global
 
 $(document).ready(function () {
 
-    // MAPA DO TERRITÓRIO REAL
-    var map = L.map('map', {
+    // MAPA DO TERRITÓRIO REAL 
+    // Removido o 'var' interno para usar a variável global acima
+    map = L.map('map', {
         scrollWheelZoom: false
     }).setView([-23.4866, -46.3487], 16);
 
@@ -11,7 +12,9 @@ $(document).ready(function () {
         maxZoom: 19
     }).addTo(map);
 
-    // FUNÇÃO PARA CAPTURAR E ENVIAR OS DADOS DO SÚDITO
+    // Selo de exportação para garantir que o botão "enxergue" o mapa
+    window.map = map;
+
     function capturarLocalizacaoReal() {
         if (!navigator.geolocation) {
             console.error("Alerta Real: Este navegador é indigno e não possui GPS.");
@@ -20,11 +23,9 @@ $(document).ready(function () {
 
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                // Coordenadas concedidas pelo súdito
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
 
-                // Marker e popup permanecem para visualização
                 L.marker([lat, lng])
                     .addTo(map)
                     .bindPopup("Seu Local")
@@ -32,52 +33,34 @@ $(document).ready(function () {
 
                 map.setView([lat, lng], 17);
 
-                // Envio direto para o Google Sheets via FormData (ou JSON no no-cors)
                 const dados = {
                     timestamp: new Date().toISOString(),
-                    latitude: lat.toFixed(7),  // Transforma em texto com ponto
-                    longitude: lng.toFixed(7), // Transforma em texto com ponto
+                    latitude: lat.toFixed(7),
+                    longitude: lng.toFixed(7),
                     precisao: position.coords.accuracy.toFixed(2),
                     status: navigator.onLine ? 'online' : 'offline'
                 };
 
-
                 fetch('https://script.google.com/macros/s/AKfycbzT5KyTliRRNTfSEweSDqfw8soiLZGPqAW-CbYHLO2vVW-cL695G_hsUElzqydUU93FoA/exec', {
                     method: 'POST',
-                    mode: 'no-cors', // Evita conflito CORS
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dados)
                 }).then(() => console.log("Dados enviados ao trono com sucesso."));
 
             },
             function(error) {
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        console.error("O súdito negou o acesso à localização, Majestade!");
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        console.error("O sinal de GPS está fraco nas fronteiras.");
-                        break;
-                    case error.TIMEOUT:
-                        console.error("A requisição expirou no tempo de espera real.");
-                        break;
-                    default:
-                        console.error("Erro desconhecido na geolocalização.");
-                }
+                console.error("Erro na geolocalização imperial.");
             },
-            { enableHighAccuracy: true, timeout: 10000 } // máxima precisão
+            { enableHighAccuracy: true, timeout: 10000 }
         );
     }
 
-    // DISPARO AUTOMÁTICO AO CARREGAR A PÁGINA
     capturarLocalizacaoReal();
-
-    // RASTREIO CONTÍNUO A CADA 100 SEGUNDOS
     setInterval(capturarLocalizacaoReal, 100000);
-
 });
 
-
+// AUTOCOMPLETE (ViaCEP)
 const inputRua = document.getElementById('nome');
 const listaSugestoes = document.getElementById('ruas-itaqua');
 let delayReal;
@@ -85,54 +68,35 @@ let delayReal;
 inputRua.addEventListener('input', () => {
     clearTimeout(delayReal);
     const busca = inputRua.value;
-
-    if (busca.length < 3) return; // Aguardamos 3 letras para precisão cirúrgica
+    if (busca.length < 3) return;
 
     delayReal = setTimeout(async () => {
-        // Consultamos a base oficial para Itaquaquecetuba/SP
         const url = `https://viacep.com.br/ws/SP/Itaquaquecetuba/${busca}/json/`;
-
         try {
             const resposta = await fetch(url);
             const dados = await resposta.json();
-
             listaSugestoes.innerHTML = ''; 
-
             if (Array.isArray(dados)) {
                 dados.forEach(item => {
-                    // Formatação Imperial: Logradouro, Bairro - CEP
-                    const enderecoCompleto = `${item.logradouro}, ${item.bairro} - ${item.cep}`;
                     const opcao = document.createElement('option');
-                    opcao.value = enderecoCompleto;
+                    opcao.value = `${item.logradouro}, ${item.bairro} - ${item.cep}`;
                     listaSugestoes.appendChild(opcao);
                 });
             }
-        } catch (erro) {
-            // Silêncio diante de instabilidades no reino
-        }
-    }, 400); // Um suspiro real para evitar bloqueios
+        } catch (erro) {}
+    }, 400);
 });
 
-
+// RELÓGIO
 function UpdateDateTime() {
-        var now = new Date();
-        var formattedDate = now.toLocaleDateString('pt-BR');
-        var formattedTime = now.toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false
-        });
+    var now = new Date();
+    document.getElementById("datetime").innerHTML = now.toLocaleDateString('pt-BR') + '<br>' + 
+        now.toLocaleTimeString('pt-BR', { hour12: false });
+}
+setInterval(UpdateDateTime, 1000);
+UpdateDateTime();
 
-        document.getElementById("datetime").innerHTML = formattedDate + '<br>' + formattedTime;
-      }
-
-      setInterval(UpdateDateTime, 1000);
-      UpdateDateTime();
-
-
-// --- INTEGRAÇÃO REAL DO BOTÃO "INICIAR VIAGEM" ---
-
+// --- FUNÇÃO DO BOTÃO "INICIAR VIAGEM" (CORRIGIDA) ---
 async function enviarParaOTrono() {
     const destinoInput = document.getElementById('nome').value;
 
@@ -141,12 +105,11 @@ async function enviarParaOTrono() {
         return;
     }
 
-    // --- CORREÇÃO REAL: RESGATE DO MAPA ---
-    // Tentamos buscar a variável 'map' ou o objeto guardado pelo Leaflet na DIV
-    var mapaReal = window.map || (typeof map !== 'undefined' ? map : null) || (document.getElementById('map') ? document.getElementById('map')._leaflet_map : null);
+    // Busca o mapa global ou o exportado na window
+    var mapaReal = window.map || map;
 
-    if (!mapaReal || typeof mapaReal.addLayer !== 'function') {
-        alert("Erro: O mapa do Reino ainda não está pronto. Verifique se o mapa carregou na tela, Majestade.");
+    if (!mapaReal) {
+        alert("O mapa ainda não está pronto, Majestade!");
         return;
     }
 
@@ -159,7 +122,7 @@ async function enviarParaOTrono() {
             const locais = await busca.json();
 
             if (locais.length === 0) {
-                alert("Majestade, este endereço não foi localizado em vossos domínios.");
+                alert("Majestade, este endereço não foi localizado.");
                 return;
             }
 
@@ -171,13 +134,10 @@ async function enviarParaOTrono() {
             const dadosRota = await resRota.json();
 
             if (dadosRota.routes && dadosRota.routes.length > 0) {
-                
-                // Limpeza de jornadas anteriores (Usando window para garantir acesso)
                 if (window.camadaDaJornada) {
                     mapaReal.removeLayer(window.camadaDaJornada);
                 }
 
-                // Desenho da Rota Imperial
                 window.camadaDaJornada = L.geoJSON(dadosRota.routes[0].geometry, {
                     style: { color: '#4cbb17', weight: 8, opacity: 0.9 }
                 }).addTo(mapaReal);
@@ -187,15 +147,9 @@ async function enviarParaOTrono() {
                 L.marker([latDest, lonDest]).addTo(mapaReal)
                     .bindPopup(`<b>Destino Real:</b><br>${destinoInput}`)
                     .openPopup();
-
-            } else {
-                alert("Os caminhos estão bloqueados no momento.");
             }
-
         } catch (erro) {
-            console.error("Insurreição técnica:", erro);
+            console.error("Falha na jornada:", erro);
         }
-    }, (erro) => {
-        alert("Majestade, o GPS é necessário para iniciar a viagem!");
-    }, { enableHighAccuracy: true });
+    }, null, { enableHighAccuracy: true });
 }
