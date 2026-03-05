@@ -78,23 +78,28 @@ position: left;
 </header>
 
 
-<section id="map" style="display: flex; flex-direction: row-reverse; max-width: 100%; height: 60vw; margin: 1px; border: 1px solid #000000; position: relative; overflow: visible;">
+<section id="map" style="display: flex; flex-direction: row-reverse; max-width: 100%; height: 60vw; margin: 1px; border: 1px solid #000000; position: relative;">
   
-  <aside style="width: 15%; height: 100%; border-left: 1px solid #000000; background: rgba(15, 24, 103, 0.8); z-index: 1000;"></aside>
-  <aside style="width: 100%; height: 100%; border-left: 1px solid #000000; background: rgba(0, 0, 1, 0.2); z-index: 1000;"></aside>
+    
 
-  <div style="position: absolute; left: 15%; top: 10%; width: 65%; min-height: 25vw; background: #4cbb17; z-index: 2000; border: 2px solid #ffffff; padding: 2vw; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);">
+  <aside style="width: 15%; height: 100%; border-left: 1px solid #000000; background: rgba(15, 24, 103, 0.8); z-index: 1000;">
+       <div style="width: 10px; height: 10px; margin: 1px; border: 1px solid #000000; background-color: #000000">
+</div>
+    </aside>
     
-    <span style="color: white; font-size: 3vw; margin-bottom: 1vw; text-align: center; font-weight: bold;">PARA ONDE VOCÊ QUER IR?</span>
+    <aside style="width: 100%; height: 100%; border-left: 1px solid #000000; background: rgba(0, 0, 1, 0.2); z-index: 1000;">
+       <div style="width: 10px; height: 10px; margin: 1px; border: 1px solid #000000; background-color: #000000">
+</div>
+    </aside>
+
+    <div style="position: absolute; left: 0; top: 0; width: 65%; height: 20vw; background: #4cbb17; z-index: 1100; border: 1px solid #ffffff; margin-left: 15%; margin-top: 10%;">
+    <span style="color: white; font-size: 3vw;">PARA ONDE VOCÊ QUER IR?</span><br>
     
-    <input type="text" id="nome" name="nome" list="ruas-itaqua" required="" style="width: 90%; height: 6vw; font-size: 3vw; background-color: white; border: none; outline: none; margin-bottom: 2vw; padding: 5px;">
+    <input type="text" id="nome" name="nome" list="ruas-itaqua" required="" style="width: 90%; height: 5vw; font-size: 3vw; background-color: white;">
     
     <datalist id="ruas-itaqua"></datalist>
-
-    <button type="button" onclick="enviarParaOTrono()" style="width: 80%; height: 7vw; background-color: white; color: #4cbb17; border: none; font-size: 3vw; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 5px; box-shadow: 0px 4px 10px rgba(0,0,0,0.3);">
-        INICIAR VIAGEM
-    </button>
-  </div>
+</div>
+ 
 </section>
     
     
