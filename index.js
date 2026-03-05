@@ -1,3 +1,5 @@
+var map; // Agora o Reino todo sabe quem ele é!
+
 $(document).ready(function () {
 
     // MAPA DO TERRITÓRIO REAL
