@@ -135,66 +135,68 @@ async function enviarParaOTrono() {
     const destinoInput = document.getElementById('nome').value;
 
     if (!destinoInput) {
-        alert("Soberano, por favor, indique o destino no campo de busca!");
+        alert("Soberano, por favor, indique o destino!");
         return;
     }
 
-    // 1. Capturamos o GPS na hora para garantir precisão total
+    // 1. Capturamos o GPS
     navigator.geolocation.getCurrentPosition(async (posicao) => {
         const latOri = posicao.coords.latitude;
         const lonOri = posicao.coords.longitude;
 
         try {
-            // 2. Transformamos o texto do Input em coordenadas (Nominatim)
-            // Usamos Itaquaquecetuba como âncora para não sair do reino
-            const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}+Itaquaquecetuba&format=json&limit=1`);
+            // 2. Usamos o Nominatim (Ele não tem erro de CORS como o ViaCEP para buscas de rua)
+            // Ele é o tradutor oficial de texto para coordenadas
+            const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}&format=json&limit=1`);
             const locais = await busca.json();
 
             if (locais.length === 0) {
-                alert("Majestade, este local não foi encontrado nos mapas de Itaquá.");
+                alert("Majestade, este endereço não foi localizado.");
                 return;
             }
 
             const latDest = locais[0].lat;
             const lonDest = locais[0].lon;
 
-            // 3. Consultando o OSRM para traçar a rota real
+            // 3. Consultando o OSRM
             const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${lonOri},${latOri};${lonDest},${latDest}?overview=full&geometries=geojson`;
             const resRota = await fetch(urlOSRM);
             const dadosRota = await resRota.json();
 
             if (dadosRota.routes && dadosRota.routes.length > 0) {
-                // Buscamos o mapa que Vossa Majestade já inicializou lá em cima
-                // O Leaflet guarda a instância no DOM; vamos acessá-la com elegância
-                const mapaReal = document.getElementById('map')._leaflet_map || map; 
+                
+                // --- AJUSTE REAL PARA ENCONTRAR O MAPA ---
+                // Se o 'map' global falhou, buscamos a instância que o Leaflet anexou ao HTML
+                var mapaReal = map; 
+                if (!mapaReal || typeof mapaReal.addLayer !== 'function') {
+                    // Tentativa de resgate do mapa escondido
+                    mapaReal = document.getElementById('map')._leaflet_map;
+                }
 
-                // Limpamos rotas anteriores se existirem
+                if (!mapaReal) {
+                    alert("Erro: O mapa do Reino não foi inicializado corretamente.");
+                    return;
+                }
+
+                // Limpamos rotas anteriores
                 if (window.camadaDaJornada) {
                     mapaReal.removeLayer(window.camadaDaJornada);
                 }
 
-                // 4. Desenhamos a Rota Verde (Cor do ItaquaFlip!)
+                // 4. Desenhamos a Rota
                 window.camadaDaJornada = L.geoJSON(dadosRota.routes[0].geometry, {
                     style: { color: '#4cbb17', weight: 8, opacity: 0.9 }
-                }).addTo(mapaReal);
+                }).addTo(mapaReal); // Aqui não dará mais erro de addLayer!
 
-                // Ajustamos a visão para o Rei contemplar todo o trajeto
                 mapaReal.fitBounds(window.camadaDaJornada.getBounds());
 
-                // Marcador no Destino
                 L.marker([latDest, lonDest]).addTo(mapaReal)
-                    .bindPopup(`<b>Destino Real:</b><br>${destinoInput}`)
-                    .openPopup();
+                    .bindPopup(`<b>Destino:</b> ${destinoInput}`).openPopup();
 
-            } else {
-                alert("Os caminhos estão obstruídos, não conseguimos traçar a rota.");
             }
 
         } catch (erro) {
             console.error("Falha na comunicação imperial:", erro);
-            alert("Houve um erro ao consultar os mapas do reino.");
         }
-    }, () => {
-        alert("Majestade, precisamos que o GPS esteja ativo para traçar a rota!");
     });
 }
