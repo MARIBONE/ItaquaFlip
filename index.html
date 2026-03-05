@@ -263,14 +263,13 @@ function enviarParaOTrono() {
 
     const destinoTexto = document.getElementById("nome").value;
 
-    if (!destinoTexto) {
-        alert("Digite um destino");
-        return;
-    }
+    console.log("Texto enviado:", destinoTexto);
 
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinoTexto)}`)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinoTexto)}&limit=1`)
         .then(response => response.json())
         .then(data => {
+
+            console.log("Resposta completa:", data);
 
             if (!data.length) {
                 alert("Endereço não encontrado");
@@ -284,10 +283,10 @@ function enviarParaOTrono() {
             console.log("Longitude:", lng);
 
         })
-        .catch(error => {
-            console.error("Erro:", error);
-        });
+        .catch(error => console.error(error));
 }
 </script>
+
+
     
   </body>
