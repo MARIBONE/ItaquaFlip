@@ -259,31 +259,30 @@ position: left;
     <script src="index.js"></script>
 
     <script>
+let rotaAtual = null;
+
 function enviarParaOTrono() {
 
     const destinoTexto = document.getElementById("nome").value;
 
-    console.log("Texto enviado:", destinoTexto);
-
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinoTexto)}&limit=1`)
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinoTexto + ", Itaquaquecetuba, SP, Brasil")}&limit=1`)
         .then(response => response.json())
         .then(data => {
-
-            console.log("Resposta completa:", data);
 
             if (!data.length) {
                 alert("Endereço não encontrado");
                 return;
             }
 
-            const lat = data[0].lat;
-            const lng = data[0].lon;
+            const destLat = parseFloat(data[0].lat);
+            const destLng = parseFloat(data[0].lon);
 
-            console.log("Latitude:", lat);
-            console.log("Longitude:", lng);
+            tracarRota(destLat, destLng);
+        });
+}
 
-        })
-        .catch(error => console.error(error));
+function tracarRota(destLat, destLng) {
+    console.log("Pronto para chamar OSRM:", destLat, destLng);
 }
 </script>
 
