@@ -258,9 +258,36 @@ position: left;
 
     <script src="index.js"></script>
 
-    <script>function enviarParaOTrono() {
-    console.log("Botão funcionando");
+    <script>
+function enviarParaOTrono() {
+
+    const destinoTexto = document.getElementById("nome").value;
+
+    if (!destinoTexto) {
+        alert("Digite um destino");
+        return;
     }
-      </script>
+
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinoTexto)}`)
+        .then(response => response.json())
+        .then(data => {
+
+            if (!data.length) {
+                alert("Endereço não encontrado");
+                return;
+            }
+
+            const lat = data[0].lat;
+            const lng = data[0].lon;
+
+            console.log("Latitude:", lat);
+            console.log("Longitude:", lng);
+
+        })
+        .catch(error => {
+            console.error("Erro:", error);
+        });
+}
+</script>
     
   </body>
