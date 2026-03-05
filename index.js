@@ -141,64 +141,65 @@ async function enviarParaOTrono() {
         return;
     }
 
-    // 1. Capturamos o GPS
+    // TENTATIVA DE RESGATE MULTINÍVEL DO MAPA
+    var mapaReal = window.map || (document.getElementById('map') ? document.getElementById('map')._leaflet_map : null);
+
+    if (!mapaReal || typeof mapaReal.addLayer !== 'function') {
+        alert("Erro: O mapa do Reino ainda não está pronto. Recarregue a página, Majestade.");
+        return;
+    }
+
+    // 1. Capturamos o GPS do Usuário (Ponto de Partida)
     navigator.geolocation.getCurrentPosition(async (posicao) => {
         const latOri = posicao.coords.latitude;
         const lonOri = posicao.coords.longitude;
 
         try {
-            // 2. Usamos o Nominatim (Ele não tem erro de CORS como o ViaCEP para buscas de rua)
-            // Ele é o tradutor oficial de texto para coordenadas
-            const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}&format=json&limit=1`);
+            // 2. Tradução do Endereço (Nominatim)
+            const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}+Itaquaquecetuba&format=json&limit=1`);
             const locais = await busca.json();
 
             if (locais.length === 0) {
-                alert("Majestade, este endereço não foi localizado.");
+                alert("Majestade, este endereço não foi localizado em vossos domínios.");
                 return;
             }
 
             const latDest = locais[0].lat;
             const lonDest = locais[0].lon;
 
-            // 3. Consultando o OSRM
+            // 3. Traçado da Rota (OSRM)
             const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${lonOri},${latOri};${lonDest},${latDest}?overview=full&geometries=geojson`;
             const resRota = await fetch(urlOSRM);
             const dadosRota = await resRota.json();
 
             if (dadosRota.routes && dadosRota.routes.length > 0) {
                 
-                // --- AJUSTE REAL PARA ENCONTRAR O MAPA ---
-                // Se o 'map' global falhou, buscamos a instância que o Leaflet anexou ao HTML
-                var mapaReal = map; 
-                if (!mapaReal || typeof mapaReal.addLayer !== 'function') {
-                    // Tentativa de resgate do mapa escondido
-                    mapaReal = document.getElementById('map')._leaflet_map;
-                }
-
-                if (!mapaReal) {
-                    alert("Erro: O mapa do Reino não foi inicializado corretamente.");
-                    return;
-                }
-
-                // Limpamos rotas anteriores
+                // Limpeza de jornadas anteriores
                 if (window.camadaDaJornada) {
                     mapaReal.removeLayer(window.camadaDaJornada);
                 }
 
-                // 4. Desenhamos a Rota
+                // 4. Desenho da Rota Imperial
                 window.camadaDaJornada = L.geoJSON(dadosRota.routes[0].geometry, {
                     style: { color: '#4cbb17', weight: 8, opacity: 0.9 }
-                }).addTo(mapaReal); // Aqui não dará mais erro de addLayer!
+                }).addTo(mapaReal);
 
+                // Enquadramento da visão
                 mapaReal.fitBounds(window.camadaDaJornada.getBounds());
 
+                // Marcador de Destino
                 L.marker([latDest, lonDest]).addTo(mapaReal)
-                    .bindPopup(`<b>Destino:</b> ${destinoInput}`).openPopup();
+                    .bindPopup(`<b>Destino Real:</b><br>${destinoInput}`)
+                    .openPopup();
 
+            } else {
+                alert("Os caminhos estão bloqueados no momento.");
             }
 
         } catch (erro) {
-            console.error("Falha na comunicação imperial:", erro);
+            console.error("Insurreição técnica:", erro);
         }
-    });
+    }, (erro) => {
+        alert("Majestade, o GPS é necessário para iniciar a viagem!");
+    }, { enableHighAccuracy: true });
 }
