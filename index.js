@@ -98,14 +98,17 @@ UpdateDateTime();
 
 // --- FUNÇÃO DO BOTÃO "INICIAR VIAGEM" (CORRIGIDA) ---
 async function enviarParaOTrono() {
-    const destinoInput = document.getElementById('nome').value;
+    let destinoInput = document.getElementById('nome').value;
 
     if (!destinoInput) {
         alert("Soberano, por favor, indique o destino!");
         return;
     }
 
-    // Busca o mapa global ou o exportado na window
+    // LIMPEZA REAL: Removemos o CEP e detalhes que confundem o GPS
+    // Deixamos apenas Rua e Bairro para uma busca mais assertiva
+    let enderecoLimpo = destinoInput.split(' - ')[0]; // Pega tudo antes do CEP
+
     var mapaReal = window.map || map;
 
     if (!mapaReal) {
@@ -118,16 +121,27 @@ async function enviarParaOTrono() {
         const lonOri = posicao.coords.longitude;
 
         try {
-            const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}+Itaquaquecetuba&format=json&limit=1`);
+            // Buscamos apenas pelo Logradouro e Bairro em Itaquaquecetuba
+            const urlBusca = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(enderecoLimpo)}+Itaquaquecetuba&format=json&limit=1`;
+            const busca = await fetch(urlBusca);
             const locais = await busca.json();
 
             if (locais.length === 0) {
-                alert("Majestade, este endereço não foi localizado.");
-                return;
+                // Se falhar, tentamos uma busca ainda mais simples (apenas o que foi digitado)
+                const buscaSimples = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}&format=json&limit=1`);
+                const locaisSimples = await buscaSimples.json();
+                
+                if (locaisSimples.length === 0) {
+                    alert("Majestade, este endereço não foi localizado. Tente digitar apenas o nome da rua.");
+                    return;
+                }
+                var localFinal = locaisSimples[0];
+            } else {
+                var localFinal = locais[0];
             }
 
-            const latDest = locais[0].lat;
-            const lonDest = locais[0].lon;
+            const latDest = localFinal.lat;
+            const lonDest = localFinal.lon;
 
             const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${lonOri},${latOri};${lonDest},${latDest}?overview=full&geometries=geojson`;
             const resRota = await fetch(urlOSRM);
@@ -145,7 +159,7 @@ async function enviarParaOTrono() {
                 mapaReal.fitBounds(window.camadaDaJornada.getBounds());
 
                 L.marker([latDest, lonDest]).addTo(mapaReal)
-                    .bindPopup(`<b>Destino Real:</b><br>${destinoInput}`)
+                    .bindPopup(`<b>Destino Real:</b><br>${enderecoLimpo}`)
                     .openPopup();
             }
         } catch (erro) {
