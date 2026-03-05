@@ -284,8 +284,8 @@ function enviarParaOTrono() {
 
 function tracarRota(destLat, destLng) {
 
-    const origemLat = -23.486;
-    const origemLng = -46.347;
+    const origemLat = latUsuario;
+    const origemLng = lngUsuario;
 
     const url = `https://router.project-osrm.org/route/v1/driving/${origemLng},${origemLat};${destLng},${destLat}?overview=full&geometries=geojson`;
 
