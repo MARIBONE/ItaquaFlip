@@ -141,21 +141,20 @@ async function enviarParaOTrono() {
         return;
     }
 
-    // TENTATIVA DE RESGATE MULTINÍVEL DO MAPA
-    var mapaReal = window.map || (document.getElementById('map') ? document.getElementById('map')._leaflet_map : null);
+    // --- CORREÇÃO REAL: RESGATE DO MAPA ---
+    // Tentamos buscar a variável 'map' ou o objeto guardado pelo Leaflet na DIV
+    var mapaReal = window.map || (typeof map !== 'undefined' ? map : null) || (document.getElementById('map') ? document.getElementById('map')._leaflet_map : null);
 
     if (!mapaReal || typeof mapaReal.addLayer !== 'function') {
-        alert("Erro: O mapa do Reino ainda não está pronto. Recarregue a página, Majestade.");
+        alert("Erro: O mapa do Reino ainda não está pronto. Verifique se o mapa carregou na tela, Majestade.");
         return;
     }
 
-    // 1. Capturamos o GPS do Usuário (Ponto de Partida)
     navigator.geolocation.getCurrentPosition(async (posicao) => {
         const latOri = posicao.coords.latitude;
         const lonOri = posicao.coords.longitude;
 
         try {
-            // 2. Tradução do Endereço (Nominatim)
             const busca = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(destinoInput)}+Itaquaquecetuba&format=json&limit=1`);
             const locais = await busca.json();
 
@@ -167,27 +166,24 @@ async function enviarParaOTrono() {
             const latDest = locais[0].lat;
             const lonDest = locais[0].lon;
 
-            // 3. Traçado da Rota (OSRM)
             const urlOSRM = `https://router.project-osrm.org/route/v1/driving/${lonOri},${latOri};${lonDest},${latDest}?overview=full&geometries=geojson`;
             const resRota = await fetch(urlOSRM);
             const dadosRota = await resRota.json();
 
             if (dadosRota.routes && dadosRota.routes.length > 0) {
                 
-                // Limpeza de jornadas anteriores
+                // Limpeza de jornadas anteriores (Usando window para garantir acesso)
                 if (window.camadaDaJornada) {
                     mapaReal.removeLayer(window.camadaDaJornada);
                 }
 
-                // 4. Desenho da Rota Imperial
+                // Desenho da Rota Imperial
                 window.camadaDaJornada = L.geoJSON(dadosRota.routes[0].geometry, {
                     style: { color: '#4cbb17', weight: 8, opacity: 0.9 }
                 }).addTo(mapaReal);
 
-                // Enquadramento da visão
                 mapaReal.fitBounds(window.camadaDaJornada.getBounds());
 
-                // Marcador de Destino
                 L.marker([latDest, lonDest]).addTo(mapaReal)
                     .bindPopup(`<b>Destino Real:</b><br>${destinoInput}`)
                     .openPopup();
