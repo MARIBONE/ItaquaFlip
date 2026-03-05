@@ -293,7 +293,7 @@ function tracarRota(destLat, destLng) {
         .then(response => response.json())
         .then(data => {
 
-          comsole.log(Chegou na parte de desenhar");
+          comsole.log("Chegou na parte de desenhar");
 
             if (!data.routes || !data.routes.length) {
                 alert("Rota não encontrada");
