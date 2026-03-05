@@ -7,7 +7,7 @@
 <meta name="description" content="Dê um Flip por aí! Vai de Flip!">
 <meta name="author" content="Æ Maribone Tecnologia">
 <meta name="generator" content= "ItaquaFlip">
-<meta name="robots" content="/index, follow">
+<meta name="robots" content="index, follow">
 <meta name="keywords" content="ItaquaFlip, Itaqua, Flip, Itaqua Flip, Chamar Flip, Passagem Barata, Ônibus Itaquaquecetuba, Horário">
 <title>ItaquaFlip Mobilidade</title>
 </head>
@@ -259,6 +259,7 @@ position: left;
     <script src="index.js"></script>
 
     <script>
+
 let rotaAtual = null;
 
 function enviarParaOTrono() {
@@ -282,9 +283,34 @@ function enviarParaOTrono() {
 }
 
 function tracarRota(destLat, destLng) {
-    console.log("Pronto para chamar OSRM:", destLat, destLng);
+
+    const origemLat = -23.486;
+    const origemLng = -46.347;
+
+    const url = `https://router.project-osrm.org/route/v1/driving/${origemLng},${origemLat};${destLng},${destLat}?overview=full&geometries=geojson`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+
+            if (!data.routes || !data.routes.length) {
+                alert("Rota não encontrada");
+                return;
+            }
+
+            if (rotaAtual) {
+                map.removeLayer(rotaAtual);
+            }
+
+            rotaAtual = L.geoJSON(data.routes[0].geometry).addTo(map);
+
+            map.fitBounds(rotaAtual.getBounds());
+        });
 }
+
 </script>
+
+
 
 
     
