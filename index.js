@@ -1,4 +1,6 @@
 var map; // Agora o Reino todo sabe quem ele é!
+var latUsuario;
+var lngUsuario;
 
 $(document).ready(function () {
 
@@ -21,8 +23,8 @@ $(document).ready(function () {
         navigator.geolocation.getCurrentPosition(
             function(position) {
                 // Coordenadas concedidas pelo súdito
-                var lat = position.coords.latitude;
-                var lng = position.coords.longitude;
+                latUsuario = position.coords.latitude;
+                lngUsuario = position.coords.longitude;
 
                 // Marker e popup permanecem para visualização
                 L.marker([lat, lng])
