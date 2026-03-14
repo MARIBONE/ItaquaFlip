@@ -3,7 +3,7 @@ $(document).ready(function () {
     // 1. A NOVA INICIALIZAÇÃO DO MAPA (VISÃO TRANSVERSAL)
     var map = new maplibregl.Map({
         container: 'map', 
-        style: 'https://demotiles.maplibre.org/style.json', // Estilo básico real
+        style: 'https://tiles.stadiamaps.com/styles/alidade_smooth.json',
         center: [-46.3487, -23.4866], // [LONGITUDE, LATITUDE] - Ordem invertida!
         zoom: 16,
         pitch: 60, // Inclinação transversal majestosa
